@@ -16,11 +16,10 @@ import static be.faros.sandwichbar.mother.CompanyMother.createCompany;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 
-public class CompanyRepositoryTest extends RepositoryTest {
-
+public class CompanyRepositoryTest extends RepositoryTestBase {
     @Container
     @ServiceConnection
-    public static PostgreSQLContainer testContainer = createContainer();
+    static PostgreSQLContainer postgreSQLContainer = new PostgreSQLContainer<>("postgres:16-alpine3.18");
 
     @Autowired
     CompanyRepository companyRepository;

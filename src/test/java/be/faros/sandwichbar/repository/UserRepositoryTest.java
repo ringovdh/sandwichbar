@@ -9,6 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
+import org.springframework.test.annotation.DirtiesContext;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 
@@ -20,12 +21,7 @@ import static be.faros.sandwichbar.mother.CompanyMother.createCompany;
 import static be.faros.sandwichbar.mother.UserMother.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class UserRepositoryTest extends RepositoryTest{
-
-    @Container
-    @ServiceConnection
-    public static PostgreSQLContainer testContainer = createContainer();
-
+public class UserRepositoryTest extends RepositoryTestBase {
     @Autowired
     private UserRepository userRepository;
 

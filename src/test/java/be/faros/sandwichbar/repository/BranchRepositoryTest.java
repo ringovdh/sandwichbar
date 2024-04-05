@@ -14,11 +14,10 @@ import static be.faros.sandwichbar.mother.BranchMother.createBranch;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 
-public class BranchRepositoryTest extends RepositoryTest {
-
+public class BranchRepositoryTest extends RepositoryTestBase {
     @Container
     @ServiceConnection
-    public static PostgreSQLContainer testContainer = createContainer();
+    static PostgreSQLContainer postgreSQLContainer = new PostgreSQLContainer<>("postgres:16-alpine3.18");
 
     @Autowired
     BranchRepository branchRepository;

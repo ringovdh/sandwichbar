@@ -9,6 +9,9 @@ import be.faros.sandwichbar.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+import java.util.List;
+
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -19,6 +22,11 @@ public class UserServiceImpl implements UserService {
     public UserServiceImpl(UserRepository userRepository) {
         this.userRepository = userRepository;
         this.userMapper = new UserMapper();
+    }
+
+    @Override
+    public List<UserDTO> getUsers() {
+        return Collections.singletonList(new UserDTO(1, "TEst", "testmail", "testpassword"));
     }
 
     @Override
