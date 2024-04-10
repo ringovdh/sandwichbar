@@ -17,9 +17,15 @@ public class UserMother {
         return createUser("Tommy", "tommy@sesame.com", "S&cret-11");
     }
 
-    public static User createExistingUser() {
+    public static User createExistingUserPino() {
         User user = createNewUserPino();
         user.setId(100);
+        return user;
+    }
+
+    public static User createExistingUserPinoDifferentPassword() {
+        User user = createExistingUserPino();
+        user.setPassword("Wr0ng-pwd");
         return user;
     }
 
@@ -35,8 +41,20 @@ public class UserMother {
         return user;
     }
 
+    public static UserDTO createNewUserTommyDTO() {
+        return userMapper.mapUserToUserDTO(createNewUserTommy());
+    }
+
     public static UserDTO createNewUserPinoDTO() {
         return userMapper.mapUserToUserDTO(createNewUserPino());
+    }
+
+    public static UserDTO createExistingUserPinoDTO() {
+        return userMapper.mapUserToUserDTO(createExistingUserPino());
+    }
+
+    public static UserDTO createExistingUserPinoDifferentPasswordDTO() {
+        return userMapper.mapUserToUserDTO(createExistingUserPinoDifferentPassword());
     }
 
     public static UserDTO createInvalidEmailUserPinoDTO() {

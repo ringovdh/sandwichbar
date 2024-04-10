@@ -9,9 +9,6 @@ import be.faros.sandwichbar.util.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.List;
-
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -25,16 +22,25 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDTO> getUsers() {
-        return Collections.singletonList(new UserDTO(1, "TEst", "testmail", "testpassword"));
-    }
-
-    @Override
     public UserDTO registerUser(UserDTO userDTO) {
         User user = userMapper.mapUserDTOToUser(userDTO);
         validateUser(user);
         User savedUser = userRepository.save(user);
         return userMapper.mapUserToUserDTO(savedUser);
+    }
+
+    @Override
+    public UserDTO loginUser(UserDTO userDTO) {
+        User user = userRepository.findByEmail(userDTO.email())
+                .orElseThrow(() -> new InvalidUserException("user_not_found"));
+        compareUserPassword(user.getPassword(), userDTO.password());
+        return userMapper.mapUserToUserDTO(user);
+    }
+
+    private void compareUserPassword(String userPassword, String incomingPassword) {
+        if (!userPassword.equals(incomingPassword)) {
+            throw new InvalidUserException("different_password");
+        }
     }
 
     private void validateUser(User user) {
