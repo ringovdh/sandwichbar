@@ -6,4 +6,5 @@ import org.springframework.http.ResponseEntity;
 public interface UserController {
 
     ResponseEntity<UserDTO> registerUser(UserDTO user);
+    ResponseEntity<UserDTO> loginUser(UserDTO user);
 }
