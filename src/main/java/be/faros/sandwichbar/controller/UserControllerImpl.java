@@ -1,6 +1,5 @@
 package be.faros.sandwichbar.controller;
 
-
 import be.faros.sandwichbar.dto.UserDTO;
 import be.faros.sandwichbar.service.UserService;
 import org.springframework.http.ResponseEntity;
@@ -17,15 +16,13 @@ public class UserControllerImpl implements UserController {
         this.userService = userService;
     }
 
-    @PostMapping
-    @RequestMapping("/register")
+    @PostMapping("/register")
     @Override
     public ResponseEntity<UserDTO> registerUser(@RequestBody UserDTO user) {
         return ResponseEntity.ok().body(userService.registerUser(user));
     }
 
-    @PostMapping
-    @RequestMapping("/login")
+    @PostMapping("/login")
     @Override
     public ResponseEntity<UserDTO> loginUser(@RequestBody UserDTO user) {
         return ResponseEntity.ok().body(userService.loginUser(user));
