@@ -1,7 +1,6 @@
 package be.faros.sandwichbar.security;
 
 import be.faros.sandwichbar.entity.User;
-import be.faros.sandwichbar.exception.InvalidUserException;
 import be.faros.sandwichbar.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -20,7 +19,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new InvalidUserException("user_not_found"));
+                .orElseThrow(() -> new UsernameNotFoundException("user_not_found"));
         return org.springframework.security.core.userdetails.User.builder()
                 .username(user.getEmail())
                 .password(user.getPassword())

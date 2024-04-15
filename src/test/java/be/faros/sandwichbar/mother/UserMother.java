@@ -1,6 +1,7 @@
 package be.faros.sandwichbar.mother;
 
-import be.faros.sandwichbar.dto.UserDTO;
+import be.faros.sandwichbar.dto.request.LoginRequest;
+import be.faros.sandwichbar.dto.request.RegisterRequest;
 import be.faros.sandwichbar.entity.Company;
 import be.faros.sandwichbar.entity.User;
 import be.faros.sandwichbar.mapper.UserMapper;
@@ -16,6 +17,7 @@ public class UserMother {
     public static User createNewUserTommy() {
         return createUser("Tommy", "tommy@sesame.com", "S&cret-11");
     }
+
 
     public static User createExistingUserPino() {
         User user = createNewUserPino();
@@ -41,28 +43,28 @@ public class UserMother {
         return user;
     }
 
-    public static UserDTO createNewUserTommyDTO() {
-        return userMapper.mapUserToUserDTO(createNewUserTommy());
+    public static RegisterRequest createRegisterRequestTommy() {
+        return new RegisterRequest("Tommy", "tommy@sesame.com", "S&cret-11");
     }
 
-    public static UserDTO createNewUserPinoDTO() {
-        return userMapper.mapUserToUserDTO(createNewUserPino());
+    public static RegisterRequest createRegisterRequestPino() {
+        return new RegisterRequest("Pino", "pino@sesame.com", "S&cret-10");
     }
 
-    public static UserDTO createExistingUserPinoDTO() {
-        return userMapper.mapUserToUserDTO(createExistingUserPino());
+    public static LoginRequest createLoginRequestPino() {
+        return new LoginRequest("pino@sesame.com", "S&cret-10");
     }
 
-    public static UserDTO createExistingUserPinoDifferentPasswordDTO() {
-        return userMapper.mapUserToUserDTO(createExistingUserPinoDifferentPassword());
+    public static LoginRequest createLoginRequestDifferentPasswordPino() {
+        return new LoginRequest("pino.sesame.com", "Wr0ng-pwd");
     }
 
-    public static UserDTO createInvalidEmailUserPinoDTO() {
-        return new UserDTO(0, "Pino", "pino.sesame.com", "S&cret-10");
+    public static RegisterRequest createInvalidEmailUserRegisterRequest() {
+        return new RegisterRequest("Pino", "pino.sesame.com", "S&cret-10");
     }
 
-    public static UserDTO createInvalidPasswordUserPinoDTO() {
-        return new UserDTO(0, "Pino", "pino@sesame.com", "Secret");
+    public static RegisterRequest createInvalidPasswordRegisterRequestPino() {
+        return new RegisterRequest( "Pino", "pino@sesame.com", "Secret");
     }
 
     private static User createUser(String name, String email, String password) {
