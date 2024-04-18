@@ -14,7 +14,8 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @Transactional
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
-public class RepositoryTestBase {
+public abstract class RepositoryTestBase {
+
     @Container
     @ServiceConnection
     static PostgreSQLContainer postgreSQLContainer = new PostgreSQLContainer<>("postgres:16-alpine3.18");

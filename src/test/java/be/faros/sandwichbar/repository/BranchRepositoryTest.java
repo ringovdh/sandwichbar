@@ -5,9 +5,6 @@ import be.faros.sandwichbar.entity.Branch;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
 
 import static be.faros.sandwichbar.mother.AddressMother.createAddress;
 import static be.faros.sandwichbar.mother.BranchMother.createBranch;
@@ -15,9 +12,6 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 
 public class BranchRepositoryTest extends RepositoryTestBase {
-    @Container
-    @ServiceConnection
-    static PostgreSQLContainer postgreSQLContainer = new PostgreSQLContainer<>("postgres:16-alpine3.18");
 
     @Autowired
     BranchRepository branchRepository;

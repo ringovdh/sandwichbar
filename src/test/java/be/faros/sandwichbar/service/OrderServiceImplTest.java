@@ -1,15 +1,18 @@
 package be.faros.sandwichbar.service;
 
-import be.faros.sandwichbar.SandwichbarTestBase;
-import be.faros.sandwichbar.repository.OrderRepository;
+import be.faros.sandwichbar.repository.OrderRepositoryTest;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 class OrderServiceImplTest extends SandwichbarTestBase {
 
     @Mock
-    OrderRepository orderRepository;
+    OrderRepositoryTest orderRepository;
 
     @InjectMocks
     OrderServiceImpl orderService;
+
+
+
+
 }

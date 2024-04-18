@@ -1,4 +1,4 @@
-package be.faros.sandwichbar;
+package be.faros.sandwichbar.service;
 
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;

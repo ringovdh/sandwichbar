@@ -1,6 +1,7 @@
 package be.faros.sandwichbar.controller;
 
-import be.faros.sandwichbar.dto.OrderDTO;
+import be.faros.sandwichbar.dto.request.OrderRequest;
+import be.faros.sandwichbar.dto.response.OrderResponse;
 import be.faros.sandwichbar.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,7 @@ public class OrderControllerImpl implements OrderController {
 
     @PostMapping
     @Override
-    public ResponseEntity<OrderDTO> createOrder(@RequestBody OrderDTO order) {
+    public ResponseEntity<OrderResponse> createOrder(@RequestBody OrderRequest order) {
         return ResponseEntity.ok().body(orderService.createOrder(order));
     }
 

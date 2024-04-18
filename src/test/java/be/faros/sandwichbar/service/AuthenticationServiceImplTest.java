@@ -1,6 +1,6 @@
 package be.faros.sandwichbar.service;
 
-import be.faros.sandwichbar.SandwichbarTestBase;
+import be.faros.sandwichbar.dto.request.RegisterRequest;
 import be.faros.sandwichbar.dto.response.LoginResponse;
 import be.faros.sandwichbar.entity.User;
 import be.faros.sandwichbar.exception.InvalidUserException;
@@ -20,9 +20,11 @@ import java.util.Optional;
 import static be.faros.sandwichbar.mother.UserMother.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 class AuthenticationServiceImplTest extends SandwichbarTestBase {
+
     @Mock
     private UserRepository userRepository;
     @Mock
@@ -35,8 +37,11 @@ class AuthenticationServiceImplTest extends SandwichbarTestBase {
     @Test
     @DisplayName("Register a new user")
     public void registerNewUser() {
-        userService.registerUser(createRegisterRequestPino());
-        // What to test??
+        RegisterRequest registerRequest = createRegisterRequestPino();
+        userService.registerUser(registerRequest);
+
+        verify(userRepository.findByEmail(registerRequest.email()));
+        verify(userRepository.save(any(User.class)));
     }
 
     @Test

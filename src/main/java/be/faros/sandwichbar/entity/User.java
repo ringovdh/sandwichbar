@@ -9,7 +9,7 @@ public class User extends BaseEntity {
     private String name;
     private String password;
     private String email;
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     @JoinColumn(name = "company_id")
     private Company company;
 

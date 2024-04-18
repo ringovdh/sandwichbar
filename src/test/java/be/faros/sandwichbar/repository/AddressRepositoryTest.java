@@ -9,6 +9,7 @@ import static be.faros.sandwichbar.mother.AddressMother.createAddress;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class AddressRepositoryTest extends RepositoryTestBase {
+
     @Autowired
     private AddressRepository addressRepository;
 

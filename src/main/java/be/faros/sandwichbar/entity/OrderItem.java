@@ -3,7 +3,7 @@ package be.faros.sandwichbar.entity;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name="orderItem")
+@Table(name="orderitem")
 public class OrderItem extends BaseEntity {
 
     @ManyToOne
@@ -14,13 +14,16 @@ public class OrderItem extends BaseEntity {
     @OneToOne
     @JoinColumn(name = "sandwich_id", referencedColumnName = "id")
     private Sandwich sandwich;
+    @OneToOne
+    @JoinColumn(name = "drink_id", referencedColumnName = "id")
+    private Drink drink;
 
     public Order getOrder() {
         return order;
     }
 
-    public void setOrder(Order order) {
-        this.order = order;
+    public void setOrder(Order sorder) {
+        this.order = sorder;
     }
 
     public double getPrice() {
@@ -45,5 +48,13 @@ public class OrderItem extends BaseEntity {
 
     public void setSandwich(Sandwich sandwich) {
         this.sandwich = sandwich;
+    }
+
+    public Drink getDrink() {
+        return drink;
+    }
+
+    public void setDrink(Drink drink) {
+        this.drink = drink;
     }
 }
