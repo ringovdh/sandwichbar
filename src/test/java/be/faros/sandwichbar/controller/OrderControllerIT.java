@@ -1,34 +1,35 @@
 package be.faros.sandwichbar.controller;
 
-import be.faros.sandwichbar.dto.request.OrderRequest;
-import be.faros.sandwichbar.dto.response.OrderResponse;
-import be.faros.sandwichbar.entity.Drink;
-import be.faros.sandwichbar.entity.Ingredient;
-import be.faros.sandwichbar.entity.Sandwich;
-import be.faros.sandwichbar.entity.User;
+import be.faros.sandwichbar.dto.request.CreateOrderRequest;
+import be.faros.sandwichbar.dto.response.CreateOrderResponse;
+import be.faros.sandwichbar.dto.response.GetOrderResponse;
 import be.faros.sandwichbar.mother.DrinkMother;
-import be.faros.sandwichbar.repository.*;
+import be.faros.sandwichbar.repository.DrinkRepository;
+import be.faros.sandwichbar.repository.IngredientRepository;
+import be.faros.sandwichbar.repository.OrderRepository;
+import be.faros.sandwichbar.repository.SandwichRepository;
+import be.faros.sandwichbar.repository.UserRepository;
+import be.faros.sandwichbar.service.OrderService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Arrays;
 
-import static be.faros.sandwichbar.mother.DrinkMother.getDrink;
-import static be.faros.sandwichbar.mother.IngredientMother.getCheddar;
-import static be.faros.sandwichbar.mother.IngredientMother.getTomatoes;
 import static be.faros.sandwichbar.mother.OrderMother.createNewOrderRequest;
 import static be.faros.sandwichbar.mother.SandwichMother.createSandwichDTO;
-import static be.faros.sandwichbar.mother.SandwichMother.getSandwich;
-import static be.faros.sandwichbar.mother.UserMother.createNewUserPino;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class OrderControllerIT extends ControllerITBase {
 
     @Autowired
-    OrderRepositoryTest orderRepository;
+    OrderRepository orderRepository;
+    @Autowired
+    OrderService orderService;
     @Autowired
     UserRepository userRepository;
     @Autowired
@@ -40,24 +41,26 @@ public class OrderControllerIT extends ControllerITBase {
 
 
     @Test
+    @Sql(statements = """
+            INSERT INTO "user"(id, name, password, email) VALUES(1, 'Pino', 'pino@sesame.com', 'S&cret-10');
+            INSERT INTO ingredient(id, category, name, stock) VALUES (1, 'Vegetables', 'Tomato', 3);
+            INSERT INTO ingredient(id, category, name, stock) VALUES (2, 'Cheese', 'Cheddar', 5);
+            INSERT INTO sandwich(id, name, price) VALUES (1, 'Cheese sandwich', 4.5);
+            INSERT INTO drink(id, name, price, stock) VALUES (1, 'Cola', 2.5, 5);
+            INSERT INTO sandwich_ingredient(id, sandwich_id, ingredient_id) VALUES (1, 1, 1);
+            INSERT INTO sandwich_ingredient(id, sandwich_id, ingredient_id) VALUES (2, 1, 2);
+            """)
     @DisplayName("Create an order")
     public void createOrder() throws URISyntaxException {
-        User user = createNewUserPino();
-        Ingredient tomato = getTomatoes();
-        Ingredient cheddar = getCheddar();
-        Sandwich sandwich = getSandwich(Arrays.asList(tomato, cheddar));
-        Drink drink = getDrink();
+        CreateOrderRequest createOrderRequest = createNewOrderRequest(1, createSandwichDTO(1), DrinkMother.createDrinkDTO(1));
 
-        userRepository.save(user);
-        ingredientRepository.saveAll(Arrays.asList(tomato, cheddar));
-        drinkRepository.save(drink);
-        sandwichRepository.save(sandwich);
+        ResponseEntity<CreateOrderResponse> response = restTemplate.postForEntity(new URI("/orders"), createOrderRequest, CreateOrderResponse.class);
 
-        OrderRequest orderRequest = createNewOrderRequest(user.getId(), createSandwichDTO(sandwich.getId()), DrinkMother.createDrinkDTO(drink.getId()));
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(1, response.getBody().id());
 
-
-        ResponseEntity<OrderResponse> response = restTemplate.postForEntity(new URI("/orders"), orderRequest, OrderResponse.class);
-
+        GetOrderResponse order = orderService.findById(response.getBody().id());
+        assertEquals(2, order.items().size());
     }
 
 }

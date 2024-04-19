@@ -4,11 +4,8 @@ import be.faros.sandwichbar.dto.request.LoginRequest;
 import be.faros.sandwichbar.dto.request.RegisterRequest;
 import be.faros.sandwichbar.entity.Company;
 import be.faros.sandwichbar.entity.User;
-import be.faros.sandwichbar.mapper.UserMapper;
 
 public class UserMother {
-
-    private static final UserMapper userMapper = new UserMapper();
 
     public static User createNewUserPino() {
         return createUser("Pino", "pino@sesame.com", "S&cret-10");

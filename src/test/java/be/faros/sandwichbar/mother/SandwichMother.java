@@ -1,18 +1,20 @@
 package be.faros.sandwichbar.mother;
 
 import be.faros.sandwichbar.dto.SandwichDTO;
-import be.faros.sandwichbar.entity.Ingredient;
 import be.faros.sandwichbar.entity.Sandwich;
 
-import java.util.List;
+import java.util.Arrays;
+
+import static be.faros.sandwichbar.mother.IngredientMother.getCheddar;
+import static be.faros.sandwichbar.mother.IngredientMother.getTomatoes;
 
 public class SandwichMother {
 
-    public static Sandwich getSandwich(List<Ingredient> ingredients) {
+    public static Sandwich getCheeseSandwich() {
         Sandwich sandwich = new Sandwich();
         sandwich.setName("CheeseSandwich");
-        sandwich.setIngredients(ingredients);
-        sandwich.setPrice(4);
+        sandwich.setIngredients(Arrays.asList(getTomatoes(), getCheddar()));
+        sandwich.setPrice(4.5);
 
         return  sandwich;
     }

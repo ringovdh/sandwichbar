@@ -1,4 +1,4 @@
 package be.faros.sandwichbar.dto.response;
 
-public record OrderResponse(int id) {
+public record CreateOrderResponse(int id) {
 }

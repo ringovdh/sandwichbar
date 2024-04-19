@@ -12,7 +12,7 @@ public class Order extends BaseEntity {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
     private double price;
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order", cascade = CascadeType.PERSIST)
     private List<OrderItem> items;
 
 

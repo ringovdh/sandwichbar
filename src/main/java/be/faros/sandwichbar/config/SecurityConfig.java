@@ -37,7 +37,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST, "/authenticate/register/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/authenticate/login/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/orders").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/orders/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/orders/**").permitAll()
                         .anyRequest().authenticated())
                 .authenticationManager(authenticationManager)
                 .build();

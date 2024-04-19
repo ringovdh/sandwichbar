@@ -3,7 +3,7 @@ package be.faros.sandwichbar.mother;
 import be.faros.sandwichbar.dto.DrinkDTO;
 import be.faros.sandwichbar.dto.OrderItemDTO;
 import be.faros.sandwichbar.dto.SandwichDTO;
-import be.faros.sandwichbar.dto.request.OrderRequest;
+import be.faros.sandwichbar.dto.request.CreateOrderRequest;
 import be.faros.sandwichbar.entity.Order;
 import be.faros.sandwichbar.entity.OrderItem;
 import be.faros.sandwichbar.entity.Sandwich;
@@ -13,8 +13,8 @@ import java.util.List;
 
 public class OrderMother {
 
-    public static OrderRequest createNewOrderRequest(int userId, SandwichDTO sandwich, DrinkDTO drink) {
-        return new OrderRequest(
+    public static CreateOrderRequest createNewOrderRequest(int userId, SandwichDTO sandwich, DrinkDTO drink) {
+        return new CreateOrderRequest(
                 userId,
                 List.of(createNewOrderItem_sandwich_DTO(sandwich), createNewOrderItem_drink_DTO(drink)));
     }
@@ -33,10 +33,11 @@ public class OrderMother {
                 drink);
     }
 
-    private static Order getOrder(User user, List<OrderItem> items) {
+    public static Order createOrder(User user, List<OrderItem> items) {
         Order order = new Order();
+        order.setId(10);
         order.setUser(user);
-        //order.setItems(items);
+        order.setItems(items);
         return order;
     }
 

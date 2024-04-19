@@ -1,10 +1,16 @@
 package be.faros.sandwichbar.service;
 
 import be.faros.sandwichbar.dto.OrderItemDTO;
-import be.faros.sandwichbar.dto.request.OrderRequest;
-import be.faros.sandwichbar.dto.response.OrderResponse;
-import be.faros.sandwichbar.entity.*;
+import be.faros.sandwichbar.dto.request.CreateOrderRequest;
+import be.faros.sandwichbar.dto.response.CreateOrderResponse;
+import be.faros.sandwichbar.dto.response.GetOrderResponse;
+import be.faros.sandwichbar.entity.Drink;
+import be.faros.sandwichbar.entity.Order;
+import be.faros.sandwichbar.entity.OrderItem;
+import be.faros.sandwichbar.entity.Sandwich;
+import be.faros.sandwichbar.entity.User;
 import be.faros.sandwichbar.exception.InvalidOrderException;
+import be.faros.sandwichbar.mapper.OrderMapper;
 import be.faros.sandwichbar.repository.DrinkRepository;
 import be.faros.sandwichbar.repository.OrderRepository;
 import be.faros.sandwichbar.repository.SandwichRepository;
@@ -24,34 +30,45 @@ public class OrderServiceImpl implements OrderService {
     private final UserRepository userRepository;
     private final SandwichRepository sandwichRepository;
     private final DrinkRepository drinkRepository;
+    private final OrderMapper orderMapper;
+
 
     @Autowired
-    public OrderServiceImpl(OrderRepository orderRepository, UserRepository userRepository, SandwichRepository sandwichRepository, DrinkRepository drinkRepository) {
+    public OrderServiceImpl(OrderRepository orderRepository,
+                            UserRepository userRepository,
+                            SandwichRepository sandwichRepository,
+                            DrinkRepository drinkRepository) {
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
         this.sandwichRepository = sandwichRepository;
         this.drinkRepository = drinkRepository;
+        this.orderMapper = new OrderMapper();
     }
-
 
     @Override
-    public OrderResponse createOrder(OrderRequest orderRequest) {
-        User user = userRepository.findById(orderRequest.userId()).orElseThrow(() -> new InvalidOrderException("unknown_user"));
-        createNewOrder(user, orderRequest);
-        return null;
+    public CreateOrderResponse createOrder(CreateOrderRequest createOrderRequest) {
+        User user = userRepository.findById(createOrderRequest.userId()).orElseThrow(() -> new InvalidOrderException("unknown_user"));
+        Order newOrder = createNewOrder(user, createOrderRequest);
+        return new CreateOrderResponse(newOrder.getId());
     }
 
-    private void createNewOrder(User user, OrderRequest orderRequest) {
+    @Override
+    @Transactional(readOnly = true)
+    public GetOrderResponse findById(int id) {
+        Order order = orderRepository.findById(id).orElseThrow(() -> new InvalidOrderException("unknown_order"));
+        return orderMapper.mapToGetOrderResponse(order);
+    }
+
+    private Order createNewOrder(User user, CreateOrderRequest createOrderRequest) {
         Order order = new Order();
         order.setUser(user);
-        orderRepository.save(order);
-        /*order.setItems(createOrderItems(order, orderRequest.items()));
-        order.setPrice(calculatePrice(order.getItems()));*/
-        orderRepository.save(order);
+        order.setItems(createOrderItems(order, createOrderRequest.items()));
+        order.setPrice(calculatePrice(order.getItems()));
+        return orderRepository.save(order);
     }
 
     private double calculatePrice(List<OrderItem> items) {
-        return 11.0;
+        return 11.0; //TODO calculate price
     }
 
     private List<OrderItem> createOrderItems(Order order, List<OrderItemDTO> items) {

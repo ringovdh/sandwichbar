@@ -17,31 +17,41 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Optional;
 
-import static be.faros.sandwichbar.mother.UserMother.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static be.faros.sandwichbar.mother.UserMother.createExistingUserPino;
+import static be.faros.sandwichbar.mother.UserMother.createInvalidEmailUserRegisterRequest;
+import static be.faros.sandwichbar.mother.UserMother.createInvalidPasswordRegisterRequestPino;
+import static be.faros.sandwichbar.mother.UserMother.createLoginRequestDifferentPasswordPino;
+import static be.faros.sandwichbar.mother.UserMother.createLoginRequestPino;
+import static be.faros.sandwichbar.mother.UserMother.createRegisterRequestPino;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-class AuthenticationServiceImplTest extends SandwichbarTestBase {
+class AuthenticationServiceTest extends SandwichbarTestBase {
 
     @Mock
     private UserRepository userRepository;
+
     @Mock
     private PasswordEncoder passwordEncoder;
+
     @Mock
     private AuthenticationManager authenticationManager;
+
     @InjectMocks
-    private AuthenticationServiceImpl userService;
+    private AuthenticationServiceImpl authenticationService;
 
     @Test
     @DisplayName("Register a new user")
     public void registerNewUser() {
         RegisterRequest registerRequest = createRegisterRequestPino();
-        userService.registerUser(registerRequest);
+        authenticationService.registerUser(registerRequest);
 
-        verify(userRepository.findByEmail(registerRequest.email()));
-        verify(userRepository.save(any(User.class)));
+        verify(userRepository).findByEmail(registerRequest.email());
+        verify(userRepository).save(any(User.class));
     }
 
     @Test
@@ -51,7 +61,7 @@ class AuthenticationServiceImplTest extends SandwichbarTestBase {
         when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
 
         InvalidUserException exception = assertThrows(InvalidUserException.class, () ->
-            userService.registerUser(createRegisterRequestPino())
+            authenticationService.registerUser(createRegisterRequestPino())
         );
 
         assertEquals("existing_email", exception.getMessage());
@@ -61,7 +71,7 @@ class AuthenticationServiceImplTest extends SandwichbarTestBase {
     @DisplayName("Register a new user when email is invalid")
     public void registerNewUser_emailInvalid() {
         InvalidUserException exception = assertThrows(InvalidUserException.class, () ->
-                userService.registerUser(createInvalidEmailUserRegisterRequest())
+                authenticationService.registerUser(createInvalidEmailUserRegisterRequest())
         );
 
         assertEquals("invalid_email", exception.getMessage());
@@ -71,7 +81,7 @@ class AuthenticationServiceImplTest extends SandwichbarTestBase {
     @DisplayName("Register a new user when password is invalid")
     public void registerNewUser_passwordInvalid() {
         InvalidUserException exception = assertThrows(InvalidUserException.class, () ->
-                userService.registerUser(createInvalidPasswordRegisterRequestPino())
+                authenticationService.registerUser(createInvalidPasswordRegisterRequestPino())
         );
 
         assertEquals("invalid_password", exception.getMessage());
@@ -81,7 +91,7 @@ class AuthenticationServiceImplTest extends SandwichbarTestBase {
     @DisplayName("Log in user")
     public void loginUser() {
         User user = createExistingUserPino();
-        LoginResponse response = userService.loginUser(createLoginRequestPino());
+        LoginResponse response = authenticationService.loginUser(createLoginRequestPino());
 
         assertNotNull(response.token());
         assertEquals(user.getEmail(), response.email());
@@ -92,7 +102,7 @@ class AuthenticationServiceImplTest extends SandwichbarTestBase {
     public void loginUser_userNotExist() {
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenThrow(UsernameNotFoundException.class);
         UsernameNotFoundException exception = assertThrows(UsernameNotFoundException.class, () ->
-                userService.loginUser(createLoginRequestPino())
+                authenticationService.loginUser(createLoginRequestPino())
         );
 
         assertNotNull(exception);
@@ -104,7 +114,7 @@ class AuthenticationServiceImplTest extends SandwichbarTestBase {
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenThrow(BadCredentialsException.class);
 
         BadCredentialsException exception = assertThrows(BadCredentialsException.class, () ->
-                userService.loginUser(createLoginRequestDifferentPasswordPino())
+                authenticationService.loginUser(createLoginRequestDifferentPasswordPino())
         );
 
         assertNotNull(exception);

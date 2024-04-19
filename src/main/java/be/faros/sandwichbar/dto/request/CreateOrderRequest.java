@@ -4,7 +4,7 @@ import be.faros.sandwichbar.dto.OrderItemDTO;
 
 import java.util.List;
 
-public record OrderRequest(
+public record CreateOrderRequest(
         int userId,
         List<OrderItemDTO> items) {
 }

@@ -1,9 +1,12 @@
 package be.faros.sandwichbar.service;
 
-import be.faros.sandwichbar.dto.request.OrderRequest;
-import be.faros.sandwichbar.dto.response.OrderResponse;
+import be.faros.sandwichbar.dto.request.CreateOrderRequest;
+import be.faros.sandwichbar.dto.response.CreateOrderResponse;
+import be.faros.sandwichbar.dto.response.GetOrderResponse;
 
 public interface OrderService {
 
-    OrderResponse createOrder(OrderRequest order);
+    CreateOrderResponse createOrder(CreateOrderRequest order);
+
+    GetOrderResponse findById(int id);
 }
