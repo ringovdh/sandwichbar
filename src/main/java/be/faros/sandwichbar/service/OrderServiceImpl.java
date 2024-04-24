@@ -4,6 +4,7 @@ import be.faros.sandwichbar.dto.OrderItemDTO;
 import be.faros.sandwichbar.dto.request.CreateOrderRequest;
 import be.faros.sandwichbar.dto.response.CreateOrderResponse;
 import be.faros.sandwichbar.dto.response.GetOrderResponse;
+import be.faros.sandwichbar.dto.response.GetOrdersResponse;
 import be.faros.sandwichbar.entity.Drink;
 import be.faros.sandwichbar.entity.Order;
 import be.faros.sandwichbar.entity.OrderItem;
@@ -57,6 +58,13 @@ public class OrderServiceImpl implements OrderService {
     public GetOrderResponse findById(int id) {
         Order order = orderRepository.findById(id).orElseThrow(() -> new InvalidOrderException("unknown_order"));
         return orderMapper.mapToGetOrderResponse(order);
+    }
+
+    @Override
+    public GetOrdersResponse findByUserId(int id) {
+        List<Order> orders = orderRepository.findByUserId(id);
+        return new GetOrdersResponse(orders.stream()
+                .map(orderMapper::mapToGetOrderResponse).toList());
     }
 
     private Order createNewOrder(User user, CreateOrderRequest createOrderRequest) {

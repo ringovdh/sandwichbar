@@ -1,8 +1,12 @@
 package be.faros.sandwichbar.security;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.security.Key;
 import java.time.Instant;
@@ -26,4 +30,30 @@ public class JwtHelper {
                 .compact();
     }
 
+    public static String extractUsername(String token) {
+        return getTokenBody(token).getSubject();
+    }
+
+    public static boolean validateToken(String token, UserDetails userDetails) {
+        final String username = extractUsername(token);
+        return username.equals(userDetails.getUsername()) && !isTokenExpired(token);
+    }
+
+    private static Claims getTokenBody(String token) {
+        try {
+            return Jwts
+                    .parser()
+                    .setSigningKey(SECRET_KEY)
+                    .build()
+                    .parseSignedClaims(token)
+                    .getPayload();
+        } catch (ExpiredJwtException e) { // Invalid signature or expired token
+            throw new AccessDeniedException("Access denied: " + e.getMessage());
+        }
+    }
+
+    private static boolean isTokenExpired(String token) {
+        Claims claims = getTokenBody(token);
+        return claims.getExpiration().before(new Date());
+    }
 }

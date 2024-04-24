@@ -20,6 +20,9 @@ public class SandwichMother {
     }
 
     public static SandwichDTO createSandwichDTO(int id) {
-        return new SandwichDTO(id);
+        return new SandwichDTO(
+                id,
+                "CheeseSandwich",
+                4.5);
     }
 }

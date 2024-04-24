@@ -11,12 +11,15 @@ import be.faros.sandwichbar.entity.User;
 
 import java.util.List;
 
+import static be.faros.sandwichbar.mother.AddressMother.createAddressDTO;
+
 public class OrderMother {
 
     public static CreateOrderRequest createNewOrderRequest(int userId, SandwichDTO sandwich, DrinkDTO drink) {
         return new CreateOrderRequest(
                 userId,
-                List.of(createNewOrderItem_sandwich_DTO(sandwich), createNewOrderItem_drink_DTO(drink)));
+                List.of(createNewOrderItem_sandwich_DTO(sandwich), createNewOrderItem_drink_DTO(drink)),
+                createAddressDTO());
     }
 
     private static OrderItemDTO createNewOrderItem_sandwich_DTO(SandwichDTO sandwich) {

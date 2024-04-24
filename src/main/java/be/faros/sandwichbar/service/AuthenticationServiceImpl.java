@@ -4,6 +4,7 @@ import be.faros.sandwichbar.dto.request.LoginRequest;
 import be.faros.sandwichbar.dto.request.RegisterRequest;
 import be.faros.sandwichbar.dto.response.LoginResponse;
 import be.faros.sandwichbar.entity.User;
+import be.faros.sandwichbar.exception.InvalidOrderException;
 import be.faros.sandwichbar.exception.InvalidUserException;
 import be.faros.sandwichbar.repository.UserRepository;
 import be.faros.sandwichbar.security.JwtHelper;
@@ -42,9 +43,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Transactional(readOnly = true)
     public LoginResponse loginUser(LoginRequest userDTO) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userDTO.email(), userDTO.password()));
-
         String token = JwtHelper.generateToken(userDTO.email());
-        return new LoginResponse("", userDTO.email(), token);
+        User user = userRepository.findByEmail(userDTO.email()).orElseThrow(() -> new InvalidOrderException("unknown_user"));
+        return new LoginResponse(user.getId(), user.getName(), userDTO.email(), token);
     }
 
     private void createNewUser(RegisterRequest request) {

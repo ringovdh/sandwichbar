@@ -6,7 +6,9 @@ import be.faros.sandwichbar.entity.Sandwich;
 public class SandwichMapper {
     public SandwichDTO mapToDTO(Sandwich sandwich) {
         return new SandwichDTO(
-                sandwich.getId()
+                sandwich.getId(),
+                sandwich.getName(),
+                sandwich.getPrice()
         );
     }
 }
