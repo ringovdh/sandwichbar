@@ -23,7 +23,7 @@ public class SandwichRepositoryTest extends RepositoryTestBase {
     @Sql(statements = """
             INSERT INTO ingredient(id, category, name, stock) VALUES (1, 'Vegetables', 'Tomato', 3);
             INSERT INTO ingredient(id, category, name, stock) VALUES (2, 'Cheese', 'Cheddar', 5);
-            INSERT INTO sandwich(id, name, price) VALUES(1, 'Cheese sandwich', 4.5);
+            INSERT INTO sandwich(id, name, price, product_id) VALUES(1, 'Cheese sandwich', 4.5, '6b65434b-af6e-48db-969f-a71558999aaf');
             INSERT INTO sandwich_ingredient(id, sandwich_id, ingredient_id) VALUES (1, 1, 1);
             INSERT INTO sandwich_ingredient(id, sandwich_id, ingredient_id) VALUES (2, 1, 2);
             """)
@@ -32,6 +32,7 @@ public class SandwichRepositoryTest extends RepositoryTestBase {
         Optional<Sandwich> sandwich = sandwichRepository.findById(1);
 
         assertTrue(sandwich.isPresent());
+        assertNotNull(sandwich.get().getProductId());
         assertEquals("Cheese sandwich", sandwich.get().getName());
         assertEquals(2, sandwich.get().getIngredients().size());
     }
@@ -43,14 +44,15 @@ public class SandwichRepositoryTest extends RepositoryTestBase {
             """)
     @DisplayName("Create a new Sandwich")
     public void createNewSandwich() {
-        Sandwich sandwich = new Sandwich();
-        sandwich.setName("Cheese sandwich");
-        sandwich.setPrice(4.5);
-        sandwich.setIngredients(List.of(ingredientRepository.findById(1).get(), ingredientRepository.findById(2).get()));
+        Sandwich sandwich = new Sandwich(
+                "Cheese sandwich",
+                4.5,
+                List.of(ingredientRepository.findById(1).get(), ingredientRepository.findById(2).get()));
 
         sandwichRepository.save(sandwich);
 
         assertNotEquals(0, sandwich.getId());
+        assertNotNull(sandwich.getProductId());
 
         Optional<Sandwich> result = sandwichRepository.findById(sandwich.getId());
 

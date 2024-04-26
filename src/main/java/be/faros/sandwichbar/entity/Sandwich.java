@@ -6,31 +6,21 @@ import java.util.List;
 
 @Entity
 @Table(name = "sandwich")
-public class Sandwich extends BaseEntity {
+public class Sandwich extends Product {
 
-    private String name;
-    private double price;
     @ManyToMany
     @JoinTable(name = "sandwich_ingredient",
             joinColumns = {@JoinColumn(name = "sandwich_id")},
             inverseJoinColumns = {@JoinColumn(name = "ingredient_id")})
     private List<Ingredient> ingredients;
 
-
-    public String getName() {
-        return name;
+    public Sandwich() {
+        super();
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
+    public Sandwich(String name, double price, List<Ingredient> ingredients) {
+        super(name, price);
+        this.ingredients = ingredients;
     }
 
     public List<Ingredient> getIngredients() {

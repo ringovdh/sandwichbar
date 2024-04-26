@@ -5,27 +5,15 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name="drink")
-public class Drink extends BaseEntity {
+public class Drink extends Product {
 
-    private String name;
-    private double price;
     private int stock;
 
+    public Drink() { }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
+    public Drink(String name, double price, int stock) {
+        super(name, price);
+        this.stock = stock;
     }
 
     public int getStock() {

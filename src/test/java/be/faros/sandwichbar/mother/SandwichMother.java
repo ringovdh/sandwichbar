@@ -11,12 +11,10 @@ import static be.faros.sandwichbar.mother.IngredientMother.getTomatoes;
 public class SandwichMother {
 
     public static Sandwich getCheeseSandwich() {
-        Sandwich sandwich = new Sandwich();
-        sandwich.setName("CheeseSandwich");
-        sandwich.setIngredients(Arrays.asList(getTomatoes(), getCheddar()));
-        sandwich.setPrice(4.5);
-
-        return  sandwich;
+        return new Sandwich(
+                "CheeseSandwich",
+                4.5,
+                Arrays.asList(getTomatoes(), getCheddar()));
     }
 
     public static SandwichDTO createSandwichDTO(int id) {

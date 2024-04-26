@@ -6,11 +6,7 @@ import be.faros.sandwichbar.entity.Drink;
 public class DrinkMother {
 
     public static Drink getDrink() {
-        Drink drink = new Drink();
-        drink.setName("Cola");
-        drink.setPrice(2);
-        drink.setStock(5);
-        return drink;
+        return new Drink("Cola", 2, 5);
     }
 
     public static DrinkDTO createDrinkDTO(int id) {

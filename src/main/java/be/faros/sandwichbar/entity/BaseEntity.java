@@ -3,7 +3,7 @@ package be.faros.sandwichbar.entity;
 import jakarta.persistence.*;
 
 @MappedSuperclass
-public class BaseEntity {
+public abstract class BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

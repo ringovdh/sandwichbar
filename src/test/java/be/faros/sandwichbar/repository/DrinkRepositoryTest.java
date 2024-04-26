@@ -17,13 +17,14 @@ public class DrinkRepositoryTest extends RepositoryTestBase {
     DrinkRepository drinkRepository;
 
     @Test
-    @Sql(statements = "INSERT INTO drink(id, name, price, stock) VALUES(1, 'Cola', 3.2, 3)")
+    @Sql(statements = "INSERT INTO drink(id, name, price, stock, product_id) VALUES(1, 'Cola', 3.2, 3, '6b65434b-af6e-48db-969f-a71558999aaf')")
     @DisplayName("Find a Drink by id")
     public void findDrinkById() {
         Optional<Drink> drink = drinkRepository.findById(1);
 
         assertTrue(drink.isPresent());
         assertEquals("Cola", drink.get().getName());
+        assertNotNull(drink.get().getProductId());
     }
 
     @Test
@@ -34,6 +35,7 @@ public class DrinkRepositoryTest extends RepositoryTestBase {
         drinkRepository.save(drink);
 
         assertNotEquals(0, drink.getId());
+        assertNotNull(drink.getProductId());
     }
 
 
