@@ -21,6 +21,7 @@ public class SandwichMother {
         return new SandwichDTO(
                 id,
                 "CheeseSandwich",
-                4.5);
+                4.5,
+                "6b65434b-af6e-48db-969f-a71558999aaf");
     }
 }

@@ -1,8 +1,9 @@
 package be.faros.sandwichbar.mother;
 
 import be.faros.sandwichbar.dto.DrinkDTO;
-import be.faros.sandwichbar.dto.OrderItemDTO;
+import be.faros.sandwichbar.dto.ProductDTO;
 import be.faros.sandwichbar.dto.SandwichDTO;
+import be.faros.sandwichbar.dto.request.CreateOrderItemDTO;
 import be.faros.sandwichbar.dto.request.CreateOrderRequest;
 import be.faros.sandwichbar.entity.Order;
 import be.faros.sandwichbar.entity.OrderItem;
@@ -22,18 +23,16 @@ public class OrderMother {
                 createAddressDTO());
     }
 
-    private static OrderItemDTO createNewOrderItem_sandwich_DTO(SandwichDTO sandwich) {
-        return new OrderItemDTO(0,
+    private static CreateOrderItemDTO createNewOrderItem_sandwich_DTO(SandwichDTO sandwich) {
+        return new CreateOrderItemDTO(
                 1,
-                sandwich,
-                null);
+                new ProductDTO(sandwich.productId()));
     }
 
-    private static OrderItemDTO createNewOrderItem_drink_DTO(DrinkDTO drink) {
-        return new OrderItemDTO(0,
+    private static CreateOrderItemDTO createNewOrderItem_drink_DTO(DrinkDTO drink) {
+        return new CreateOrderItemDTO(
                 1,
-                null,
-                drink);
+                new ProductDTO(drink.productId()));
     }
 
     public static Order createOrder(User user, List<OrderItem> items) {

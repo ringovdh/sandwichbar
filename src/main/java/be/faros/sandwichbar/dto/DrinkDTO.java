@@ -1,5 +1,5 @@
 package be.faros.sandwichbar.dto;
 
 public record DrinkDTO(
-        int id) {
-}
+        int quantity,
+        String productId) { }

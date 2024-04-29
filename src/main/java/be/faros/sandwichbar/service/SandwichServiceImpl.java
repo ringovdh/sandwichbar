@@ -24,7 +24,7 @@ public class SandwichServiceImpl implements SandwichService {
 
     @Override
     public GetSandwichesResponse findAllSandwiches() {
-        List<Sandwich> sandwiches = sandwichRepository.findAllByIngredientsStockIsNotNull();
+        List<Sandwich> sandwiches = sandwichRepository.findAllByIngredientsStockGreaterThan(0);
         return new GetSandwichesResponse(sandwiches.stream()
                 .map(sandwichMapper::mapToDTO).toList());
     }

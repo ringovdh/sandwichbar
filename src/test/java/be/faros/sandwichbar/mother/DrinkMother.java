@@ -10,6 +10,6 @@ public class DrinkMother {
     }
 
     public static DrinkDTO createDrinkDTO(int id) {
-        return new DrinkDTO(id);
+        return new DrinkDTO(1, "");
     }
 }

@@ -8,7 +8,8 @@ public class SandwichMapper {
         return new SandwichDTO(
                 sandwich.getId(),
                 sandwich.getName(),
-                sandwich.getPrice()
+                sandwich.getPrice(),
+                sandwich.getProductId()
         );
     }
 }

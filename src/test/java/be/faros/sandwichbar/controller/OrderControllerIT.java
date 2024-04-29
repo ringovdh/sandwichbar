@@ -45,8 +45,8 @@ public class OrderControllerIT extends ControllerITBase {
             INSERT INTO "user"(id, name, password, email) VALUES(1, 'Pino', 'pino@sesame.com', 'S&cret-10');
             INSERT INTO ingredient(id, category, name, stock) VALUES (1, 'Vegetables', 'Tomato', 3);
             INSERT INTO ingredient(id, category, name, stock) VALUES (2, 'Cheese', 'Cheddar', 5);
-            INSERT INTO sandwich(id, name, price) VALUES (1, 'Cheese sandwich', 4.5);
-            INSERT INTO drink(id, name, price, stock) VALUES (1, 'Cola', 2.5, 5);
+            INSERT INTO sandwich(id, name, price, product_id) VALUES (1, 'Cheese sandwich', 4.5, '');
+            INSERT INTO drink(id, name, price, stock, product_id) VALUES (1, 'Cola', 2.5, 5, '');
             INSERT INTO sandwich_ingredient(id, sandwich_id, ingredient_id) VALUES (1, 1, 1);
             INSERT INTO sandwich_ingredient(id, sandwich_id, ingredient_id) VALUES (2, 1, 2);
             """)
