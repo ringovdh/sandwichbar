@@ -25,8 +25,7 @@ public class SandwichControllerImpl implements SandwichController {
     @GetMapping
     @Override
     public ResponseEntity<GetSandwichesResponse> getSandwiches() {
-        return ResponseEntity.ok().body(sandwichService.findAllSandwiches());
+        return ResponseEntity.ok().body(sandwichService.findAllAvailableSandwiches());
     }
-
 
 }

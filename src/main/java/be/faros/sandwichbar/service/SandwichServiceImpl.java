@@ -1,11 +1,13 @@
 package be.faros.sandwichbar.service;
 
+import be.faros.sandwichbar.dto.SandwichDTO;
 import be.faros.sandwichbar.dto.response.GetSandwichesResponse;
 import be.faros.sandwichbar.entity.Sandwich;
 import be.faros.sandwichbar.mapper.SandwichMapper;
 import be.faros.sandwichbar.repository.SandwichRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -22,10 +24,14 @@ public class SandwichServiceImpl implements SandwichService {
     }
 
 
+    @Transactional(readOnly = true)
     @Override
-    public GetSandwichesResponse findAllSandwiches() {
-        List<Sandwich> sandwiches = sandwichRepository.findAllByIngredientsStockGreaterThan(0);
-        return new GetSandwichesResponse(sandwiches.stream()
-                .map(sandwichMapper::mapToDTO).toList());
+    public GetSandwichesResponse findAllAvailableSandwiches() {
+        List<Sandwich> sandwiches = sandwichRepository.findAll();
+        List<SandwichDTO> filteredSandwiches = sandwiches.stream()
+                .filter(Sandwich::isAvailable)
+                .map(sandwichMapper::mapToDTO)
+                .toList();
+        return new GetSandwichesResponse(filteredSandwiches);
     }
 }

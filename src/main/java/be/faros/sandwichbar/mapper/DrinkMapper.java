@@ -6,7 +6,9 @@ import be.faros.sandwichbar.entity.Drink;
 public class DrinkMapper {
     public DrinkDTO mapToDTO(Drink drink) {
         return new DrinkDTO(
-                1,
+                drink.getName(),
+                drink.getPrice(),
+                drink.getStock(),
                 drink.getProductId()
         );
     }

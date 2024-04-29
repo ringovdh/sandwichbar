@@ -52,7 +52,7 @@ public class OrderControllerIT extends ControllerITBase {
             """)
     @DisplayName("Create an order")
     public void createOrder() throws URISyntaxException {
-        CreateOrderRequest createOrderRequest = createNewOrderRequest(1, createSandwichDTO(1), DrinkMother.createDrinkDTO(1));
+        CreateOrderRequest createOrderRequest = createNewOrderRequest(1, createSandwichDTO(1), DrinkMother.createDrinkDTO());
 
         ResponseEntity<CreateOrderResponse> response = restTemplate.postForEntity(new URI("/orders"), createOrderRequest, CreateOrderResponse.class);
 

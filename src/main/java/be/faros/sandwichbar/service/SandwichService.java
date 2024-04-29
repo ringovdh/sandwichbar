@@ -4,5 +4,5 @@ import be.faros.sandwichbar.dto.response.GetSandwichesResponse;
 
 public interface SandwichService {
 
-    GetSandwichesResponse findAllSandwiches();
+    GetSandwichesResponse findAllAvailableSandwiches();
 }
