@@ -11,6 +11,7 @@ public class IngredientMother {
 
     public static Ingredient getTomatoes() {
         Ingredient ingredient = new Ingredient();
+        ingredient.setId(1);
         ingredient.setName(TOMATO);
         ingredient.setCategory("Vegetable");
         ingredient.setStock(10);
@@ -19,6 +20,7 @@ public class IngredientMother {
 
     public static Ingredient getCheddar() {
         Ingredient ingredient = new Ingredient();
+        ingredient.setId(2);
         ingredient.setName(CHEDDAR);
         ingredient.setCategory("Cheese");
         ingredient.setStock(10);

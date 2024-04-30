@@ -53,7 +53,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public CreateOrderResponse createOrder(CreateOrderRequest createOrderRequest) {
-        User user = userRepository.findById(createOrderRequest.userId()).orElseThrow(() -> new InvalidOrderException("unknown_user"));
+        User user = userRepository.findById(createOrderRequest.userId())
+                .orElseThrow(() -> new InvalidOrderException("unknown_user"));
         Order newOrder = createNewOrder(user, createOrderRequest);
         return new CreateOrderResponse(newOrder.getId());
     }
@@ -61,11 +62,13 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional(readOnly = true)
     public GetOrderResponse findById(int id) {
-        Order order = orderRepository.findById(id).orElseThrow(() -> new InvalidOrderException("unknown_order"));
+        Order order = orderRepository.findById(id)
+                .orElseThrow(() -> new InvalidOrderException("unknown_order"));
         return orderMapper.mapToGetOrderResponse(order);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public GetOrdersResponse findByUserId(int id) {
         List<Order> orders = orderRepository.findByUserId(id);
         return new GetOrdersResponse(orders.stream()
@@ -83,7 +86,9 @@ public class OrderServiceImpl implements OrderService {
     private double calculatePrice(List<OrderItem> items) {
         return items.stream()
                 .map(o -> {
-                    return o.getQuantity() * (o.getSandwich() != null ? o.getSandwich().getPrice() : o.getDrink().getPrice());})
+                    return o.getQuantity() * (o.getSandwich() != null ?
+                            o.getSandwich().getPrice() : o.getDrink().getPrice());
+                })
                 .reduce(0D, Double::sum);
     }
 
@@ -100,7 +105,8 @@ public class OrderServiceImpl implements OrderService {
                 orderItem.setPrice(i.quantity() * sandwich.get().getPrice());
                 updateStock(sandwich.get().getIngredients(), i.quantity());
             } else {
-                Drink drink = drinkRepository.findByProductId(i.product().productId()).orElseThrow(() -> new InvalidOrderException("unknown_product"));
+                Drink drink = drinkRepository.findByProductId(i.product().productId())
+                        .orElseThrow(() -> new InvalidOrderException("unknown_product"));
                 if (drink.getStock() > i.quantity()) {
                     orderItem.setDrink(drink);
                     orderItem.setPrice(i.quantity() * drink.getPrice());
@@ -117,8 +123,9 @@ public class OrderServiceImpl implements OrderService {
     }
 
     private void updateStock(List<Ingredient> ingredients, int quantity) {
-        ingredients.forEach( ingr ->  {
-            Ingredient ingredient = ingredientRepository.findById(ingr.getId()).orElseThrow(() -> new InvalidOrderException("unknown_ingredient"));
+        ingredients.forEach(ingr -> {
+            Ingredient ingredient = ingredientRepository.findById(ingr.getId())
+                    .orElseThrow(() -> new InvalidOrderException("unknown_ingredient"));
             if (ingredient.getStock() - quantity < 0) {
                 throw new InvalidOrderException("out_of_stock_ingredient");
             }
