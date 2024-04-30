@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import java.util.List;
 
 @Entity
-@Table(name = "sandwich")
+@DiscriminatorValue("SANDWICH")
 public class Sandwich extends Product {
 
     @ManyToMany

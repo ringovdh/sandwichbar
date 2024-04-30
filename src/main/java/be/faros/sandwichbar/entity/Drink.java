@@ -1,10 +1,10 @@
 package be.faros.sandwichbar.entity;
 
+import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
 
 @Entity
-@Table(name="drink")
+@DiscriminatorValue("DRINK")
 public class Drink extends Product {
 
     private int stock;

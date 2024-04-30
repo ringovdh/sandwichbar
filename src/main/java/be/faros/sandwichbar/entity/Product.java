@@ -1,32 +1,25 @@
 package be.faros.sandwichbar.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.DiscriminatorColumn;
+import jakarta.persistence.DiscriminatorType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
 
-import java.util.UUID;
+@Entity
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name="product_type",
+        discriminatorType = DiscriminatorType.STRING)
+public class Product extends BaseEntity {
 
-@MappedSuperclass
-public abstract class Product extends BaseEntity {
-
-    @Column(name = "product_id")
-    private String productId;
     private String name;
     private double price;
 
     public Product() {}
 
     public Product(String name, double price) {
-        this.productId = generateProductID();
         this.name = name;
         this.price = price;
-    }
-
-    public String getProductId() {
-        return productId;
-    }
-
-    public void setProductId(String productId) {
-        this.productId = productId;
     }
 
     public String getName() {
@@ -43,9 +36,5 @@ public abstract class Product extends BaseEntity {
 
     public void setPrice(double price) {
         this.price = price;
-    }
-
-    private String generateProductID() {
-        return UUID.randomUUID().toString();
     }
 }
