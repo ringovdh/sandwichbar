@@ -13,7 +13,7 @@ public class OrderMapper {
                 order.getId(),
                 order.getItems().stream()
                         .map(orderItemMapper::maptoOrderItemDTO).toList(),
-                order.getPrice()
+                order.getOrderTotal()
         );
     }
 }

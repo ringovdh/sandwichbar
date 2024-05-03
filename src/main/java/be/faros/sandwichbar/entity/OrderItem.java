@@ -9,14 +9,13 @@ public class OrderItem extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "order_id")
     private Order order;
-    private double price;
+
     private int quantity;
+
     @OneToOne
-    @JoinColumn(name = "sandwich_id", referencedColumnName = "id")
-    private Sandwich sandwich;
-    @OneToOne
-    @JoinColumn(name = "drink_id", referencedColumnName = "id")
-    private Drink drink;
+    @JoinColumn(name = "product_id", referencedColumnName = "id")
+    private Product product;
+
 
     public Order getOrder() {
         return order;
@@ -24,14 +23,6 @@ public class OrderItem extends BaseEntity {
 
     public void setOrder(Order sorder) {
         this.order = sorder;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
     }
 
     public int getQuantity() {
@@ -42,19 +33,11 @@ public class OrderItem extends BaseEntity {
         this.quantity = quantity;
     }
 
-    public Sandwich getSandwich() {
-        return sandwich;
+    public Product getProduct() {
+        return product;
     }
 
-    public void setSandwich(Sandwich sandwich) {
-        this.sandwich = sandwich;
-    }
-
-    public Drink getDrink() {
-        return drink;
-    }
-
-    public void setDrink(Drink drink) {
-        this.drink = drink;
+    public void setProduct(Product product) {
+        this.product = product;
     }
 }

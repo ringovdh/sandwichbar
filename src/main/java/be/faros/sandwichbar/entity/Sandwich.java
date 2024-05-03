@@ -9,8 +9,8 @@ import java.util.List;
 public class Sandwich extends Product {
 
     @ManyToMany
-    @JoinTable(name = "sandwich_ingredient",
-            joinColumns = {@JoinColumn(name = "sandwich_id")},
+    @JoinTable(name = "product_ingredient",
+            joinColumns = {@JoinColumn(name = "product_id")},
             inverseJoinColumns = {@JoinColumn(name = "ingredient_id")})
     private List<Ingredient> ingredients;
 

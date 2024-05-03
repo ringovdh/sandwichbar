@@ -5,15 +5,13 @@ import be.faros.sandwichbar.entity.OrderItem;
 
 public class OrderItemMapper {
 
-    private final SandwichMapper sandwichMapper = new SandwichMapper();
-    private final DrinkMapper drinkMapper = new DrinkMapper();
+    private final ProductMapper productMapper = new ProductMapper();
 
     public OrderItemDTO maptoOrderItemDTO(OrderItem orderItem) {
         return new OrderItemDTO(
                 orderItem.getId(),
                 orderItem.getQuantity(),
-                orderItem.getSandwich() != null ? sandwichMapper.mapToDTO(orderItem.getSandwich()) : null,
-                orderItem.getDrink() != null ? drinkMapper.mapToDTO(orderItem.getDrink()) : null
+                productMapper.mapToDTO(orderItem.getProduct())
         );
     }
 }

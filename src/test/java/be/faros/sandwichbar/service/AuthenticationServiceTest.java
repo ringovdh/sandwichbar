@@ -91,6 +91,8 @@ class AuthenticationServiceTest extends SandwichbarTestBase {
     @DisplayName("Log in user")
     public void loginUser() {
         User user = createExistingUserPino();
+        when(userRepository.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+
         LoginResponse response = authenticationService.loginUser(createLoginRequestPino());
 
         assertNotNull(response.token());

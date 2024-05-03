@@ -40,8 +40,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.POST, "/authenticate/register/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/authenticate/login/**").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/sandwiches").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/drinks").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/products").permitAll()
                         .anyRequest().authenticated())
                 .authenticationManager(authenticationManager)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)

@@ -1,7 +1,7 @@
 package be.faros.sandwichbar.controller;
 
-import be.faros.sandwichbar.dto.response.GetDrinksResponse;
-import be.faros.sandwichbar.service.DrinkService;
+import be.faros.sandwichbar.dto.response.GetProductsResponse;
+import be.faros.sandwichbar.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -11,20 +11,20 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
-@RequestMapping("/drinks")
-public class DrinkControllerImpl implements DrinkController {
+@RequestMapping("/products")
+public class ProductControllerImpl implements ProductController {
 
-    private final DrinkService drinkService;
+    private final ProductService productService;
 
     @Autowired
-    public DrinkControllerImpl(DrinkService drinkService) {
-        this.drinkService = drinkService;
+    public ProductControllerImpl(ProductService productService) {
+        this.productService = productService;
     }
 
     @GetMapping
     @Override
-    public ResponseEntity<GetDrinksResponse> getDrinks() {
-        return ResponseEntity.ok().body(drinkService.findAllAvailableDrinks());
+    public ResponseEntity<GetProductsResponse> getAllProducts() {
+        return ResponseEntity.ok().body(productService.findAllAvailableProducts());
     }
 
 }

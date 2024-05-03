@@ -11,7 +11,7 @@ public class Order extends BaseEntity {
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
-    private double price;
+
     @OneToMany(mappedBy = "order", cascade = CascadeType.PERSIST)
     private List<OrderItem> items;
 
@@ -24,19 +24,19 @@ public class Order extends BaseEntity {
         this.user = user;
     }
 
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
     public List<OrderItem> getItems() {
         return items;
     }
 
     public void setItems(List<OrderItem> items) {
         this.items = items;
+    }
+
+    public double getOrderTotal() {
+        return this.items.stream()
+                .map(o -> {
+                    return o.getQuantity() * (o.getProduct().getPrice());
+                })
+                .reduce(0D, Double::sum);
     }
 }

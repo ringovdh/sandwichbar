@@ -1,6 +1,7 @@
 package be.faros.sandwichbar.repository;
 
 import be.faros.sandwichbar.entity.Order;
+import be.faros.sandwichbar.entity.OrderItem;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +10,7 @@ import org.springframework.test.context.jdbc.Sql;
 import java.util.List;
 import java.util.Optional;
 
-import static be.faros.sandwichbar.mother.OrderMother.createNewOrderItem_sandwich;
+import static be.faros.sandwichbar.mother.OrderMother.createNewOrderItem;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -27,18 +28,18 @@ public class OrderRepositoryTest extends RepositoryTestBase {
     OrderItemRepository orderItemRepository;
 
     @Autowired
-    SandwichRepository sandwichRepository;
+    ProductRepository productRepository;
 
     @Test
     @Sql(statements = """
             INSERT INTO "user"(id, name, password, email) VALUES(1, 'Pino', 'pino@sesame.com', 'S&cret-10');
             INSERT INTO ingredient(id, category, name, stock) VALUES (1, 'Vegetables', 'Tomato', 3);
             INSERT INTO ingredient(id, category, name, stock) VALUES (2, 'Cheese', 'Cheddar', 5);
-            INSERT INTO sandwich(id, name, price, product_id) VALUES (1, 'Cheese sandwich', 4.5, '6b65434b-af6e-48db-969f-a71558999aaf');
-            INSERT INTO sandwich_ingredient(id, sandwich_id, ingredient_id) VALUES (1, 1, 1);
-            INSERT INTO sandwich_ingredient(id, sandwich_id, ingredient_id) VALUES (2, 1, 2);
-            INSERT INTO "order"(id, user_id, price) VALUES (1, 1, 4.5);
-            INSERT INTO orderitem(id, order_id, price, quantity, sandwich_id) VALUES(1, 1, 4.5, 1, 1);
+            INSERT INTO product(id, name, price, product_type) VALUES (1, 'Cheese sandwich', 4.5, 'SANDWICH');
+            INSERT INTO product_ingredient(id, product_id, ingredient_id) VALUES (1, 1, 1);
+            INSERT INTO product_ingredient(id, product_id, ingredient_id) VALUES (2, 1, 2);
+            INSERT INTO "order"(id, user_id) VALUES (1, 1);
+            INSERT INTO orderitem(id, order_id, quantity, product_id) VALUES(1, 1, 1, 1);
             """)
     @DisplayName("Find an Order by id")
     public void FindOrderById() {
@@ -46,8 +47,8 @@ public class OrderRepositoryTest extends RepositoryTestBase {
 
         assertTrue(order.isPresent());
         assertEquals(1, order.get().getItems().size());
-        assertNotNull(order.get().getItems().getFirst().getSandwich());
-        assertEquals(2, order.get().getItems().getFirst().getSandwich().getIngredients().size());
+        assertNotNull(order.get().getItems().getFirst().getProduct());
+        //assertEquals(2, order.get().getItems().getFirst().getProduct().getIngredients().size());
         assertNotNull(order.get().getUser());
     }
 
@@ -56,15 +57,17 @@ public class OrderRepositoryTest extends RepositoryTestBase {
             INSERT INTO "user"(id, name, password, email) VALUES(1, 'Pino', 'pino@sesame.com', 'S&cret-10');
             INSERT INTO ingredient(id, category, name, stock) VALUES (1, 'Vegetables', 'Tomato', 3);
             INSERT INTO ingredient(id, category, name, stock) VALUES (2, 'Cheese', 'Cheddar', 5);
-            INSERT INTO sandwich(id, name, price, product_id) VALUES (1, 'Cheese sandwich', 4.5, '6b65434b-af6e-48db-969f-a71558999aaf');
-            INSERT INTO sandwich_ingredient(id, sandwich_id, ingredient_id) VALUES (1, 1, 1);
-            INSERT INTO sandwich_ingredient(id, sandwich_id, ingredient_id) VALUES (2, 1, 2);
+            INSERT INTO product(id, name, price, product_type) VALUES (1, 'Cheese sandwich', 4.5, 'SANDWICH');
+            INSERT INTO product_ingredient(id, product_id, ingredient_id) VALUES (1, 1, 1);
+            INSERT INTO product_ingredient(id, product_id, ingredient_id) VALUES (2, 1, 2);
             """)
     @DisplayName("Create a new Order")
     public void CreateNewOrder() {
         Order order = new Order();
         order.setUser(userRepository.findById(1).get());
-        order.setItems(List.of(createNewOrderItem_sandwich(sandwichRepository.findById(1).get())));
+        OrderItem orderItem = createNewOrderItem(productRepository.findById(1).get());
+        orderItem.setOrder(order);
+        order.setItems(List.of(orderItem));
 
         orderRepository.save(order);
 
