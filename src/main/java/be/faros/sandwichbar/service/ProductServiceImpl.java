@@ -29,30 +29,25 @@ public class ProductServiceImpl implements ProductService {
 
     @Transactional(readOnly = true)
     @Override
-    public GetProductsResponse findAllProducts() {
-        List<Product> products = productRepository.findAll();
-
-        return new GetProductsResponse(products.stream()
-                .map(productMapper::mapToDTO).toList());
-    }
-
-    @Transactional(readOnly = true)
-    @Override
     public GetProductsResponse findAllAvailableProducts() {
-        List<Product> avaliableProducts = new ArrayList<>();
+        List<ProductDTO> avaliableProducts = new ArrayList<>();
         List<Product> products = productRepository.findAll();
 
         avaliableProducts.addAll(products.stream()
                 .filter(p -> p.getProductType().equals(ProductType.DRINK.name()))
                 .map(p -> (Drink)p)
-                .filter(d -> d.getStock() > 0).toList());
+                .filter(d -> d.getStock() > 0)
+                .map(productMapper::mapDrinkToProductDTO)
+                .toList());
+
         avaliableProducts.addAll(products.stream()
                 .filter(p -> p.getProductType().equals(ProductType.SANDWICH.name()))
                 .map(p -> (Sandwich)p)
-                .filter(Sandwich::isAvailable).toList());
+                .filter(Sandwich::isAvailable)
+                .map(productMapper::mapSandwichToProductDTO)
+                .toList());
 
-        return new GetProductsResponse(avaliableProducts.stream()
-                .map(productMapper::mapToDTO).toList());
+        return new GetProductsResponse(avaliableProducts);
     }
 
 }
