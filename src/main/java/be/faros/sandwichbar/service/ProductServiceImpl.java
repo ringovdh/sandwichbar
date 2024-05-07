@@ -1,14 +1,17 @@
 package be.faros.sandwichbar.service;
 
+import be.faros.sandwichbar.dto.ProductDTO;
 import be.faros.sandwichbar.dto.response.GetProductsResponse;
 import be.faros.sandwichbar.entity.Drink;
 import be.faros.sandwichbar.entity.Product;
 import be.faros.sandwichbar.entity.ProductType;
+import be.faros.sandwichbar.entity.Sandwich;
 import be.faros.sandwichbar.mapper.ProductMapper;
 import be.faros.sandwichbar.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -36,19 +39,20 @@ public class ProductServiceImpl implements ProductService {
     @Transactional(readOnly = true)
     @Override
     public GetProductsResponse findAllAvailableProducts() {
+        List<Product> avaliableProducts = new ArrayList<>();
         List<Product> products = productRepository.findAll();
-        // TODO filter on stock
-        return new GetProductsResponse(products.stream()
+
+        avaliableProducts.addAll(products.stream()
+                .filter(p -> p.getProductType().equals(ProductType.DRINK.name()))
+                .map(p -> (Drink)p)
+                .filter(d -> d.getStock() > 0).toList());
+        avaliableProducts.addAll(products.stream()
+                .filter(p -> p.getProductType().equals(ProductType.SANDWICH.name()))
+                .map(p -> (Sandwich)p)
+                .filter(Sandwich::isAvailable).toList());
+
+        return new GetProductsResponse(avaliableProducts.stream()
                 .map(productMapper::mapToDTO).toList());
     }
 
-    @Transactional(readOnly = true)
-    @Override
-    public GetProductsResponse findAllAvailableProducts2() {
-        List<Drink> drinks = productRepository.findAllDrinks(ProductType.DRINK.name());
-        List<Drink> drinks = productRepository.findAllDrinks(ProductType.DRINK.name());
-        // TODO filter on stock
-        return new GetProductsResponse(products.stream()
-                .map(productMapper::mapToDTO).toList());
-    }
 }

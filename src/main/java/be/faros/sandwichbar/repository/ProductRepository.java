@@ -13,8 +13,8 @@ import java.util.List;
 public interface ProductRepository extends JpaRepository<Product, Integer> {
 
     @Query(value = "SELECT * FROM product p WHERE p.product_type = 'DRINK'",nativeQuery = true)
-    List<Drink> findAllDrinks(String productType);
+    List<Drink> findAllDrinks();
 
     @Query(value = "SELECT * FROM product p WHERE p.product_type = 'SANDWICH'",nativeQuery = true)
-    List<Sandwich> findAllSandwiches(String productType);
+    List<Sandwich> findAllSandwiches();
 }
