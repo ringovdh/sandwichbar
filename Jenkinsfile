@@ -7,5 +7,9 @@ pipeline {
       }
     }
 
+    stage('Test') {
+        sh 'mvn test'
+    }
+
   }
 }
