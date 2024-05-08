@@ -15,8 +15,8 @@ pipeline {
 
     stage('Docker Build') {
       steps {
-        docker build -t sandwich .
-        docker run --name sandwichbarApp --network sandwichbar_network -p 8080:8080 sandwich
+        sh 'docker build -t sandwich .'
+        sh 'docker run --name sandwichbarApp --network sandwichbar_network -p 8080:8080 sandwich'
       }
     }
   }
