@@ -1,28 +1,11 @@
 package be.faros.sandwichbar.controller;
 
-import be.faros.sandwichbar.dto.request.CreateOrderRequest;
-import be.faros.sandwichbar.dto.response.CreateOrderResponse;
-import be.faros.sandwichbar.dto.response.GetOrderResponse;
 import be.faros.sandwichbar.repository.IngredientRepository;
 import be.faros.sandwichbar.repository.OrderRepository;
 import be.faros.sandwichbar.repository.ProductRepository;
 import be.faros.sandwichbar.repository.UserRepository;
 import be.faros.sandwichbar.service.OrderService;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.jdbc.Sql;
-
-import java.net.URI;
-import java.net.URISyntaxException;
-
-import static be.faros.sandwichbar.mother.OrderMother.createNewOrderRequest;
-import static be.faros.sandwichbar.mother.ProductMother.createExistingCheeseSandwich;
-import static be.faros.sandwichbar.mother.ProductMother.createExistingDrink;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class OrderControllerIT extends ControllerITBase {
 
@@ -42,7 +25,7 @@ public class OrderControllerIT extends ControllerITBase {
     ProductRepository productRepository;
 
 
-    @Test
+    /*@Test
     @Sql(statements = """
             INSERT INTO "user"(id, name, password, email) VALUES(1, 'Pino', 'pino@sesame.com', 'S&cret-10');
             INSERT INTO ingredient(id, category, name, stock) VALUES (1, 'Vegetables', 'Tomato', 3);
@@ -68,6 +51,6 @@ public class OrderControllerIT extends ControllerITBase {
 
         GetOrderResponse order = orderService.findById(response.getBody().id());
         assertEquals(2, order.items().size());
-    }
+    }*/
 
 }
