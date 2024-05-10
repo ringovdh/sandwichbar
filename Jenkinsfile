@@ -11,6 +11,14 @@ pipeline {
       steps {
         sh 'mvn test'
       }
+      post{
+        failure {
+          script{
+            sh "exit 1"
+            error "Stage 1 Failed, exiting now..."
+          }
+        }
+      }
     }
 
     stage('Docker Build Sandwichbar Backend') {
@@ -18,6 +26,14 @@ pipeline {
         sh 'docker rm -f sandwich-db'
         sh 'docker rm -f sandwich-backend'
         sh 'docker compose up -d'
+      }
+      post{
+        failure {
+          script{
+            sh "exit 1"
+            error "Stage 2 Failed, exiting now..."
+          }
+        }
       }
     }
 
