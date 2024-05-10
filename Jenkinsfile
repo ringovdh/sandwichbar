@@ -15,9 +15,8 @@ pipeline {
 
     stage('Docker Build Sandwichbar Backend') {
       steps {
-        sh 'docker build -t sandwich-backend .'
         sh 'docker rm -f sandwich-backend'
-        sh 'docker run --name sandwich-backend --network sandwichbar_network -dp 8080:8080 sandwich-backend'
+        sh 'docker compose up '
       }
     }
 

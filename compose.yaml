@@ -1,6 +1,6 @@
 version: '3.8'
 services:
-  postgres:
+  sandwich_db:
     image: postgres:16-alpine3.18
     restart: always
     environment:
@@ -12,6 +12,14 @@ services:
       - '5432'
     volumes:
       - pg:/var/lib/postgresql/data
+    networks:
+      - sandwichbar
+
+  sandwich_backend:
+    build: ./
+    container_name: sandwich-backend
+    ports:
+      - 8080:8080
     networks:
       - sandwichbar
 volumes:
