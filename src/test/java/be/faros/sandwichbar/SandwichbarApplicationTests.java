@@ -1,10 +1,9 @@
 package be.faros.sandwichbar;
 
+import be.faros.sandwichbar.repository.RepositoryTestBase;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
-class SandwichbarApplicationTests {
+class SandwichbarApplicationTests extends RepositoryTestBase {
 
     @Test
     void contextLoads() {
