@@ -17,7 +17,7 @@ pipeline {
       steps {
         sh 'docker rm -f sandwich-db'
         sh 'docker rm -f sandwich-backend'
-        sh 'docker compose up '
+        sh 'docker compose up -d'
       }
     }
 
