@@ -23,8 +23,8 @@ pipeline {
 
     stage('Docker Build Sandwichbar Backend') {
       steps {
-        sh 'docker rm -f sandwich-db'
-        sh 'docker rm -f sandwich-backend'
+        sh 'docker rm -f sandwich_db'
+        sh 'docker rm -f sandwich_backend'
         sh 'docker compose up -d'
       }
       post{
