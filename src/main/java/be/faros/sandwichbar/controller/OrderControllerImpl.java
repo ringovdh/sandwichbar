@@ -7,7 +7,6 @@ import be.faros.sandwichbar.dto.response.GetOrdersResponse;
 import be.faros.sandwichbar.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("/orders")
 public class OrderControllerImpl implements OrderController {
 
@@ -43,7 +41,8 @@ public class OrderControllerImpl implements OrderController {
 
     @GetMapping("/users/{id}")
     @Override
-    public ResponseEntity<GetOrdersResponse> getOrdersByUser(@PathVariable int id) {
+    public ResponseEntity<GetOrdersResponse> getOrdersByUser(
+            @PathVariable int id) {
         return ResponseEntity.ok().body(orderService.findByUserId(id));
     }
 
