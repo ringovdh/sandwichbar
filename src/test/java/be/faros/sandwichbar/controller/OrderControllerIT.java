@@ -3,7 +3,6 @@ package be.faros.sandwichbar.controller;
 import be.faros.sandwichbar.repository.IngredientRepository;
 import be.faros.sandwichbar.repository.OrderRepository;
 import be.faros.sandwichbar.repository.ProductRepository;
-import be.faros.sandwichbar.repository.UserRepository;
 import be.faros.sandwichbar.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -16,9 +15,6 @@ public class OrderControllerIT extends ControllerITBase {
     OrderService orderService;
 
     @Autowired
-    UserRepository userRepository;
-
-    @Autowired
     IngredientRepository ingredientRepository;
 
     @Autowired
@@ -27,11 +23,11 @@ public class OrderControllerIT extends ControllerITBase {
 
     /*@Test
     @Sql(statements = """
-            INSERT INTO "user"(id, name, password, email) VALUES(1, 'Pino', 'pino@sesame.com', 'S&cret-10');
-            INSERT INTO ingredient(id, category, name, stock) VALUES (1, 'Vegetables', 'Tomato', 3);
-            INSERT INTO ingredient(id, category, name, stock) VALUES (2, 'Cheese', 'Cheddar', 5);
-            INSERT INTO product(id, name, price, product_type) VALUES (1, 'Cheese sandwich', 4.5, 'SANDWICH');
-            INSERT INTO product(id, name, price, stock, product_type) VALUES (2, 'Coca-Cola', 2.5, 5, 'DRINK');
+            INSERT INTO "user"(id, username, password, email) VALUES(1, 'Pino', 'pino@sesame.com', 'S&cret-10');
+            INSERT INTO ingredient(id, category, username, stock) VALUES (1, 'Vegetables', 'Tomato', 3);
+            INSERT INTO ingredient(id, category, username, stock) VALUES (2, 'Cheese', 'Cheddar', 5);
+            INSERT INTO product(id, username, price, product_type) VALUES (1, 'Cheese sandwich', 4.5, 'SANDWICH');
+            INSERT INTO product(id, username, price, stock, product_type) VALUES (2, 'Coca-Cola', 2.5, 5, 'DRINK');
             INSERT INTO product_ingredient(id, product_id, ingredient_id) VALUES (1, 1, 1);
             INSERT INTO product_ingredient(id, product_id, ingredient_id) VALUES (2, 1, 2);
             """)

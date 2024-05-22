@@ -7,9 +7,9 @@ import be.faros.sandwichbar.dto.response.GetOrdersResponse;
 
 public interface OrderService {
 
-    CreateOrderResponse createOrder(CreateOrderRequest order);
+    CreateOrderResponse createOrder(CreateOrderRequest createOrderRequest, String ref);
 
     GetOrderResponse findById(int id);
 
-    GetOrdersResponse findByUserId(int id);
+    GetOrdersResponse findByUser(String ref);
 }

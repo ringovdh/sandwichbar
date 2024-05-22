@@ -1,30 +1,34 @@
 package be.faros.sandwichbar.security;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
+
+import java.io.IOException;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final UserDetailsServiceImpl userDetailsService;
-    private final JwtAuthenticationFilter jwtAuthFilter;
+    @Value("${okta.oauth2.issuer}")
+    private String issuer;
+    @Value("${okta.oauth2.client-id}")
+    private String clientId;
+    @Value("${frontend.url}")
+    private String frontendURL;
 
-    public SecurityConfig(UserDetailsServiceImpl userDetailsService,
-                          JwtAuthenticationFilter jwtAuthFilter) {
-        this.userDetailsService = userDetailsService;
-        this.jwtAuthFilter = jwtAuthFilter;
+    private final OAuth2loginSuccessHandler oAuth2loginSuccessHandler;
+
+    public SecurityConfig(OAuth2loginSuccessHandler oAuth2loginSuccessHandler) {
+        this.oAuth2loginSuccessHandler = oAuth2loginSuccessHandler;
     }
 
     @Bean
@@ -33,24 +37,26 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authenticationManager) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.POST, "/authenticate/register/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/authenticate/login/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/products").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/user").permitAll()
                         .anyRequest().authenticated())
-                .authenticationManager(authenticationManager)
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                .oauth2Login(oauth -> oauth.successHandler(oAuth2loginSuccessHandler))
+                .logout(l -> l.addLogoutHandler(logoutHandler()))
                 .build();
     }
 
-    @Bean
-    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
-        AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
-        authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
-        return authenticationManagerBuilder.build();
+    private LogoutHandler logoutHandler() {
+        return (request, response, authentication) -> {
+            try {
+                response.sendRedirect(issuer + "v2/logout?client_id=" + clientId + "&returnTo=" + frontendURL);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        };
     }
+
 }

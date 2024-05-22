@@ -54,6 +54,7 @@ class OrderServiceTest extends SandwichbarTestBase {
     @InjectMocks
     OrderServiceImpl orderService;
 
+    private final String userRef = "oAuth|1234";
     private final User user = createExistingUserPino();
 
 
@@ -72,17 +73,16 @@ class OrderServiceTest extends SandwichbarTestBase {
     }
 
     @Test
-    @DisplayName("Find all orders by userId")
-    public void findByUserId() {
-        int userId = 2;
+    @DisplayName("Find all orders by user")
+    public void findByUser() {
         Order order1 = createOrder(user, List.of(createNewOrderItem(createExistingCheeseSandwich())));
         Order order2 = createOrder(user, List.of(createNewOrderItem(createExistingCheeseSandwich())));
 
-        when(orderRepository.findByUserId(userId)).thenReturn(List.of(order1, order2));
+        when(orderRepository.findByUser_userRef(userRef)).thenReturn(List.of(order1, order2));
 
-        GetOrdersResponse result = orderService.findByUserId(userId);
+        GetOrdersResponse result = orderService.findByUser(userRef);
 
-        verify(orderRepository).findByUserId(userId);
+        verify(orderRepository).findByUser_userRef(userRef);
         assertEquals(2, result.orders().size());
     }
 
@@ -100,22 +100,21 @@ class OrderServiceTest extends SandwichbarTestBase {
         savedOrder.setUser(user);
         savedOrder.setItems(List.of(orderItem1, orderItem2));
         CreateOrderRequest request = new CreateOrderRequest(
-                user.getId(),
                 List.of(new CreateOrderItemDTO(1, sandwich.getId()),
                         new CreateOrderItemDTO(1, drink.getId())),
                 createAddressDTO()
         );
 
-        when(userRepository.findById(request.userId())).thenReturn(Optional.of(user));
+        when(userRepository.findByUserRef(userRef)).thenReturn(Optional.of(user));
         when(productRepository.findById(sandwich.getId())).thenReturn(Optional.of(sandwich));
         when(ingredientRepository.findById(tomato.getId())).thenReturn(Optional.of(tomato));
         when(ingredientRepository.findById(cheddar.getId())).thenReturn(Optional.of(cheddar));
         when(productRepository.findById(drink.getId())).thenReturn(Optional.of(drink));
         when(orderRepository.save(any(Order.class))).thenReturn(savedOrder);
 
-        orderService.createOrder(request);
+        orderService.createOrder(request, userRef);
 
-        verify(userRepository).findById(request.userId());
+        verify(userRepository).findByUserRef(userRef);
         verify(productRepository).findById(sandwich.getId());
         verify(productRepository).findById(drink.getId());
         verify(ingredientRepository).findById(tomato.getId());
@@ -128,18 +127,17 @@ class OrderServiceTest extends SandwichbarTestBase {
         Product drink = createExistingDrinkOutOfStock();
 
         CreateOrderRequest request = new CreateOrderRequest(
-                user.getId(),
                 List.of(new CreateOrderItemDTO(1, drink.getId())),
                 createAddressDTO()
         );
 
-        when(userRepository.findById(request.userId())).thenReturn(Optional.of(user));
+        when(userRepository.findByUserRef(userRef)).thenReturn(Optional.of(user));
         when(productRepository.findById(drink.getId())).thenReturn(Optional.of(drink));
 
         InvalidOrderException exception = assertThrows(InvalidOrderException.class, () ->
-                orderService.createOrder(request)
+                orderService.createOrder(request, userRef)
         );
-        verify(userRepository).findById(request.userId());
+        verify(userRepository).findByUserRef(userRef);
         verify(productRepository).findById(drink.getId());
         assertEquals("out_of_stock_drink", exception.getMessage());
     }
@@ -152,20 +150,19 @@ class OrderServiceTest extends SandwichbarTestBase {
         tomato.setStock(0);
 
         CreateOrderRequest request = new CreateOrderRequest(
-                user.getId(),
                 List.of(new CreateOrderItemDTO(1, sandwich.getId())),
                 createAddressDTO()
         );
 
-        when(userRepository.findById(request.userId())).thenReturn(Optional.of(user));
+        when(userRepository.findByUserRef(userRef)).thenReturn(Optional.of(user));
         when(productRepository.findById(sandwich.getId())).thenReturn(Optional.of(sandwich));
         when(ingredientRepository.findById(tomato.getId())).thenReturn(Optional.of(tomato));
 
         InvalidOrderException exception = assertThrows(InvalidOrderException.class, () ->
-                orderService.createOrder(request)
+                orderService.createOrder(request, userRef)
         );
 
-        verify(userRepository).findById(request.userId());
+        verify(userRepository).findByUserRef(userRef);
         verify(productRepository).findById(sandwich.getId());
         verify(ingredientRepository).findById(tomato.getId());
         assertEquals("out_of_stock_ingredient", exception.getMessage());

@@ -30,11 +30,10 @@ public class UserRepositoryTest extends RepositoryTestBase {
             INSERT INTO address(id, street, housenumber, postcode, city) VALUES(1, 'Sesam Street', 10, 1000, 'New York');
             INSERT INTO branch(id, name, address_id) VALUES(1, 'Sesame Street', 1);
             INSERT INTO company(id, name, branch_id) VALUES (1, 'Sesame workshop', 1);
-            INSERT INTO "user"(id, name, password, email, company_id) VALUES (1, 'Pino', 'pino@sesame.com', 'S&cret-10', 1)
-            
+            INSERT INTO "user"(id, name, username, email, user_ref, company_id) VALUES(1, 'Pino', 'pino', 'pino@sesame.com', 'oAuth|1234', 1);
             """)
-    @DisplayName("Find a Company by id")
-    public void findCompanyById() {
+    @DisplayName("Find a Company by user id")
+    public void findCompanyByUserId() {
         Optional<User> user = userRepository.findById(1);
 
         assertTrue(user.isPresent());

@@ -49,8 +49,8 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public CreateOrderResponse createOrder(CreateOrderRequest createOrderRequest) {
-        User user = userRepository.findById(createOrderRequest.userId())
+    public CreateOrderResponse createOrder(CreateOrderRequest createOrderRequest, String ref) {
+        User user = userRepository.findByUserRef(ref)
                 .orElseThrow(() -> new InvalidOrderException("unknown_user"));
         Order newOrder = createNewOrder(user, createOrderRequest);
         return new CreateOrderResponse(newOrder.getId());
@@ -66,8 +66,8 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional(readOnly = true)
-    public GetOrdersResponse findByUserId(int id) {
-        List<Order> orders = orderRepository.findByUserId(id);
+    public GetOrdersResponse findByUser(String ref) {
+        List<Order> orders = orderRepository.findByUser_userRef(ref);
         return new GetOrdersResponse(orders.stream()
                 .map(orderMapper::mapToGetOrderResponse).toList());
     }
