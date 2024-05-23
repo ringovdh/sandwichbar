@@ -18,9 +18,9 @@ import java.io.IOException;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Value("${okta.oauth2.issuer}")
+    @Value("${spring.security.oauth2.client.provider.okta.issuer-uri}")
     private String issuer;
-    @Value("${okta.oauth2.client-id}")
+    @Value("${spring.security.oauth2.client.registration.sandwichbar.client-id}")
     private String clientId;
     @Value("${frontend.url}")
     private String frontendURL;
