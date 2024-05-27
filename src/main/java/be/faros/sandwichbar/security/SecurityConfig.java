@@ -10,18 +10,11 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.logout.LogoutHandler;
-
-import java.io.IOException;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Value("${spring.security.oauth2.client.provider.okta.issuer-uri}")
-    private String issuer;
-    @Value("${spring.security.oauth2.client.registration.sandwichbar.client-id}")
-    private String clientId;
     @Value("${frontend.url}")
     private String frontendURL;
 
@@ -45,18 +38,10 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET, "/user").permitAll()
                         .anyRequest().authenticated())
                 .oauth2Login(oauth -> oauth.successHandler(oAuth2loginSuccessHandler))
-                .logout(l -> l.addLogoutHandler(logoutHandler()))
+                .logout(logout -> logout
+                        .logoutSuccessUrl(frontendURL)
+                )
                 .build();
-    }
-
-    private LogoutHandler logoutHandler() {
-        return (request, response, authentication) -> {
-            try {
-                response.sendRedirect(issuer + "v2/logout?client_id=" + clientId + "&returnTo=" + frontendURL);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        };
     }
 
 }
