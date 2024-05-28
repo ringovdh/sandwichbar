@@ -1,8 +1,10 @@
 package be.faros.sandwichbar.entity;
 
-import jakarta.persistence.*;
-
-import java.util.List;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name="company")
@@ -12,9 +14,6 @@ public class Company extends BaseEntity {
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "branch_id")
     private Branch branch;
-
-    @OneToMany(mappedBy = "company")
-    private List<User> users;
 
 
     public String getName() {
@@ -31,14 +30,6 @@ public class Company extends BaseEntity {
 
     public void setBranch(Branch branch) {
         this.branch = branch;
-    }
-
-    public List<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(List<User> users) {
-        this.users = users;
     }
 
 }

@@ -7,8 +7,10 @@ import jakarta.persistence.*;
 public class User extends BaseEntity {
 
     private String name;
-    private String password;
+    private String username;
     private String email;
+    @Column(name="user_ref")
+    private String userRef;
     @ManyToOne
     @JoinColumn(name = "company_id")
     private Company company;
@@ -22,12 +24,12 @@ public class User extends BaseEntity {
         this.name = name;
     }
 
-    public String getPassword() {
-        return password;
+    public String getUsername() {
+        return username;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setUsername(String userName) {
+        this.username = userName;
     }
 
     public String getEmail() {
@@ -36,6 +38,14 @@ public class User extends BaseEntity {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getUserRef() {
+        return userRef;
+    }
+
+    public void setUserRef(String userRef) {
+        this.userRef = userRef;
     }
 
     public Company getCompany() {

@@ -1,33 +1,35 @@
 package be.faros.sandwichbar.security;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
 
-import static org.springframework.security.config.Customizer.withDefaults;
+import java.io.IOException;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private final UserDetailsServiceImpl userDetailsService;
-    private final JwtAuthenticationFilter jwtAuthFilter;
+    @Value("${spring.security.oauth2.client.provider.okta.issuer-uri}")
+    private String issuer;
+    @Value("${spring.security.oauth2.client.registration.sandwichbar.client-id}")
+    private String clientId;
+    @Value("${frontend.url}")
+    private String frontendURL;
 
-    public SecurityConfig(UserDetailsServiceImpl userDetailsService,
-                          JwtAuthenticationFilter jwtAuthFilter) {
-        this.userDetailsService = userDetailsService;
-        this.jwtAuthFilter = jwtAuthFilter;
+    private final OAuth2loginSuccessHandler oAuth2loginSuccessHandler;
+
+    public SecurityConfig(OAuth2loginSuccessHandler oAuth2loginSuccessHandler) {
+        this.oAuth2loginSuccessHandler = oAuth2loginSuccessHandler;
     }
-
-
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -39,22 +41,22 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.POST, "/authenticate/register/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/authenticate/login/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/products").permitAll()
-                        .requestMatchers("/error").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/user").permitAll()
                         .anyRequest().authenticated())
-                .oauth2Login(oauth ->
-                        oauth.loginPage("/oauth2/authorization/sandwichbar-client-oidc"))
-                .oauth2Client(withDefaults())
+                .oauth2Login(oauth -> oauth.successHandler(oAuth2loginSuccessHandler))
+                .logout(l -> l.addLogoutHandler(logoutHandler()))
                 .build();
     }
 
-
-    @Bean
-    public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
-        AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
-        authenticationManagerBuilder.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
-        return authenticationManagerBuilder.build();
+    private LogoutHandler logoutHandler() {
+        return (request, response, authentication) -> {
+            try {
+                response.sendRedirect(issuer + "v2/logout?client_id=" + clientId + "&returnTo=" + frontendURL);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        };
     }
+
 }

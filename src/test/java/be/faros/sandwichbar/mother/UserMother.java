@@ -8,23 +8,17 @@ import be.faros.sandwichbar.entity.User;
 public class UserMother {
 
     public static User createNewUserPino() {
-        return createUser("Pino", "pino@sesame.com", "S&cret-10");
+        return createUser("Pino", "pino@sesame.com", "pino");
     }
 
     public static User createNewUserTommy() {
-        return createUser("Tommy", "tommy@sesame.com", "S&cret-11");
+        return createUser("Tommy", "tommy@sesame.com", "tommeke");
     }
 
 
     public static User createExistingUserPino() {
         User user = createNewUserPino();
         user.setId(100);
-        return user;
-    }
-
-    public static User createExistingUserPinoDifferentPassword() {
-        User user = createExistingUserPino();
-        user.setPassword("Wr0ng-pwd");
         return user;
     }
 
@@ -64,11 +58,11 @@ public class UserMother {
         return new RegisterRequest( "Pino", "pino@sesame.com", "Secret");
     }
 
-    private static User createUser(String name, String email, String password) {
+    private static User createUser(String name, String email, String userName) {
         User user = new User();
         user.setName(name);
         user.setEmail(email);
-        user.setPassword(password);
+        user.setUsername(userName);
         return user;
     }
 }

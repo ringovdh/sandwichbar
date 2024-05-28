@@ -32,7 +32,7 @@ public class OrderRepositoryTest extends RepositoryTestBase {
 
     @Test
     @Sql(statements = """
-            INSERT INTO "user"(id, name, password, email) VALUES(1, 'Pino', 'pino@sesame.com', 'S&cret-10');
+            INSERT INTO "user"(id, name, username, email, user_ref) VALUES(1, 'Pino', 'pino', 'pino@sesame.com', 'oAuth|1234');
             INSERT INTO ingredient(id, category, name, stock) VALUES (1, 'Vegetables', 'Tomato', 3);
             INSERT INTO ingredient(id, category, name, stock) VALUES (2, 'Cheese', 'Cheddar', 5);
             INSERT INTO product(id, name, price, product_type) VALUES (1, 'Cheese sandwich', 4.5, 'SANDWICH');
@@ -48,13 +48,12 @@ public class OrderRepositoryTest extends RepositoryTestBase {
         assertTrue(order.isPresent());
         assertEquals(1, order.get().getItems().size());
         assertNotNull(order.get().getItems().getFirst().getProduct());
-        //assertEquals(2, order.get().getItems().getFirst().getProduct().getIngredients().size());
         assertNotNull(order.get().getUser());
     }
 
     @Test
     @Sql(statements = """
-            INSERT INTO "user"(id, name, password, email) VALUES(1, 'Pino', 'pino@sesame.com', 'S&cret-10');
+            INSERT INTO "user"(id, name, username, email, user_ref) VALUES(1, 'Pino', 'pino', 'pino@sesame.com', 'oAuth|1234');
             INSERT INTO ingredient(id, category, name, stock) VALUES (1, 'Vegetables', 'Tomato', 3);
             INSERT INTO ingredient(id, category, name, stock) VALUES (2, 'Cheese', 'Cheddar', 5);
             INSERT INTO product(id, name, price, product_type) VALUES (1, 'Cheese sandwich', 4.5, 'SANDWICH');
