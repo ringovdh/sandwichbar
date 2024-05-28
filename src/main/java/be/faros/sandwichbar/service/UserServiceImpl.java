@@ -1,14 +1,18 @@
 package be.faros.sandwichbar.service;
 
 import be.faros.sandwichbar.dto.UserinfoDTO;
+import be.faros.sandwichbar.dto.request.UpdateUserRequest;
 import be.faros.sandwichbar.entity.User;
 import be.faros.sandwichbar.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @Service
+@Transactional
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
@@ -18,6 +22,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public UserinfoDTO getUserInfo(OidcUser oidcUser) {
         Optional<User> user = userRepository.findByUserRef(oidcUser.getName());
         if (user.isPresent()) {
@@ -26,7 +31,14 @@ public class UserServiceImpl implements UserService {
             User newUser = createUser(oidcUser);
             return createLoginResponse(newUser);
         }
+    }
 
+    @Override
+    public void updateUser(OidcUser oidcUser, UpdateUserRequest updateUserRequest) {
+        User user = userRepository.findByUserRef(oidcUser.getName())
+                .orElseThrow(() -> new EntityNotFoundException("user_not_found"));
+        user.setUsername(updateUserRequest.username());
+        userRepository.save(user);
     }
 
     private User createUser(OidcUser oidcUser) {
