@@ -22,7 +22,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional(readOnly = true)
     public UserinfoDTO getUserInfo(OidcUser oidcUser) {
         Optional<User> user = userRepository.findByUserRef(oidcUser.getName());
         if (user.isPresent()) {
