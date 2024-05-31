@@ -9,19 +9,14 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.oidc.web.logout.OidcClientInitiatedLogoutSuccessHandler;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.logout.LogoutHandler;
-
-import java.io.IOException;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Value("${spring.security.oauth2.client.provider.okta.issuer-uri}")
-    private String issuer;
-    @Value("${spring.security.oauth2.client.registration.sandwichbar.client-id}")
-    private String clientId;
     @Value("${frontend.url}")
     private String frontendURL;
 
@@ -37,26 +32,28 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        return http
+    OidcClientInitiatedLogoutSuccessHandler oidcLogoutSuccessHandler(ClientRegistrationRepository clientRegistrationRepository) {
+        OidcClientInitiatedLogoutSuccessHandler successHandler = new OidcClientInitiatedLogoutSuccessHandler(clientRegistrationRepository);
+        successHandler.setPostLogoutRedirectUri(frontendURL);
+        return successHandler;
+    }
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http,
+                                           OidcClientInitiatedLogoutSuccessHandler oidcLogoutSuccessHandler) throws Exception {
+         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.GET, "/products").permitAll()
-                        .requestMatchers(HttpMethod.GET, "/user").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/users").permitAll()
                         .anyRequest().authenticated())
                 .oauth2Login(oauth -> oauth.successHandler(oAuth2loginSuccessHandler))
-                .logout(l -> l.addLogoutHandler(logoutHandler()))
+                .logout(logout -> logout
+                        .logoutSuccessHandler(oidcLogoutSuccessHandler)
+
+                )
                 .build();
     }
 
-    private LogoutHandler logoutHandler() {
-        return (request, response, authentication) -> {
-            try {
-                response.sendRedirect(issuer + "v2/logout?client_id=" + clientId + "&returnTo=" + frontendURL);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        };
-    }
 
 }
