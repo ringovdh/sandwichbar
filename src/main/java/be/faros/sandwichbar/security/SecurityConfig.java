@@ -9,6 +9,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.client.oidc.web.logout.OidcClientInitiatedLogoutSuccessHandler;
+import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -30,8 +32,16 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        return http
+    OidcClientInitiatedLogoutSuccessHandler oidcLogoutSuccessHandler(ClientRegistrationRepository clientRegistrationRepository) {
+        OidcClientInitiatedLogoutSuccessHandler successHandler = new OidcClientInitiatedLogoutSuccessHandler(clientRegistrationRepository);
+        successHandler.setPostLogoutRedirectUri(frontendURL);
+        return successHandler;
+    }
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http,
+                                           OidcClientInitiatedLogoutSuccessHandler oidcLogoutSuccessHandler) throws Exception {
+         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.GET, "/products").permitAll()
@@ -39,9 +49,11 @@ public class SecurityConfig {
                         .anyRequest().authenticated())
                 .oauth2Login(oauth -> oauth.successHandler(oAuth2loginSuccessHandler))
                 .logout(logout -> logout
-                        .logoutSuccessUrl(frontendURL)
+                        .logoutSuccessHandler(oidcLogoutSuccessHandler)
+
                 )
                 .build();
     }
+
 
 }

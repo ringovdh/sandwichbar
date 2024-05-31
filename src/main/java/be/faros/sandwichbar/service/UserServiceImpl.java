@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
     private User createUser(OidcUser oidcUser) {
         User user = new User();
         user.setName(oidcUser.getFullName());
-        user.setEmail(oidcUser.getEmail());
+        user.setEmail(oidcUser.getName());
         user.setUserRef(oidcUser.getName());
         userRepository.save(user);
         return user;

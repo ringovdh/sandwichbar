@@ -40,4 +40,5 @@ public class AuthControllerImpl implements AuthController {
             userService.updateUser(oidcUser, updateUserRequest);
         }
     }
+
 }
