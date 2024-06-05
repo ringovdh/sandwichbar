@@ -7,6 +7,7 @@ import be.faros.sandwichbar.dto.response.GetOrdersResponse;
 import be.faros.sandwichbar.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,6 +46,7 @@ public class OrderControllerImpl implements OrderController {
         return ResponseEntity.ok().body(orderService.findById(id));
     }
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @GetMapping("/users")
     @Override
     public ResponseEntity<GetOrdersResponse> getOrdersByUser(
