@@ -72,6 +72,14 @@ public class OrderServiceImpl implements OrderService {
                 .map(orderMapper::mapToGetOrderResponse).toList());
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public GetOrdersResponse getAllOrders() {
+        List<Order> orders = orderRepository.findAll();
+        return new GetOrdersResponse(orders.stream()
+                .map(orderMapper::mapToGetOrderResponse).toList());
+    }
+
     private Order createNewOrder(User user, CreateOrderRequest createOrderRequest) {
         Order order = new Order();
         order.setUser(user);

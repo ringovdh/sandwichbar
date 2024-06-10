@@ -7,4 +7,5 @@ import java.util.List;
 public record GetOrderResponse(
         int id,
         List<OrderItemDTO> items,
-        double price) { }
+        double price,
+        String client) { }

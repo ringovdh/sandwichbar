@@ -5,10 +5,12 @@ import be.faros.sandwichbar.dto.request.UpdateUserRequest;
 import be.faros.sandwichbar.entity.User;
 import be.faros.sandwichbar.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collection;
 import java.util.Optional;
 
 @Service
@@ -25,10 +27,10 @@ public class UserServiceImpl implements UserService {
     public UserinfoDTO getUserInfo(OidcUser oidcUser) {
         Optional<User> user = userRepository.findByUserRef(oidcUser.getName());
         if (user.isPresent()) {
-            return createLoginResponse(user.get());
+            return createLoginResponse(user.get(), oidcUser.getAuthorities());
         } else {
             User newUser = createUser(oidcUser);
-            return createLoginResponse(newUser);
+            return createLoginResponse(newUser, oidcUser.getAuthorities());
         }
     }
 
@@ -49,11 +51,12 @@ public class UserServiceImpl implements UserService {
         return user;
     }
 
-    private UserinfoDTO createLoginResponse(User user) {
+    private UserinfoDTO createLoginResponse(User user, Collection<? extends GrantedAuthority> authorities) {
         return new UserinfoDTO(
                 user.getUserRef(),
                 user.getUsername(),
-                user.getEmail()
+                user.getEmail(),
+                authorities.stream().map(GrantedAuthority::getAuthority).toList()
         );
     }
 }

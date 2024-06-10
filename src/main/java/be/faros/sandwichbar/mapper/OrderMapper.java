@@ -13,7 +13,8 @@ public class OrderMapper {
                 order.getId(),
                 order.getItems().stream()
                         .map(orderItemMapper::maptoOrderItemDTO).toList(),
-                order.getOrderTotal()
+                order.getOrderTotal(),
+                order.getUser().getEmail()
         );
     }
 }

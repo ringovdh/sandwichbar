@@ -1,6 +1,9 @@
 package be.faros.sandwichbar.dto;
 
+import java.util.List;
+
 public record UserinfoDTO(
         String userId,
         String username,
-        String userEmail) { }
+        String userEmail,
+        List<String> roles) { }

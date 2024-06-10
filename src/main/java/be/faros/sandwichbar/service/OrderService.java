@@ -12,4 +12,6 @@ public interface OrderService {
     GetOrderResponse findById(int id);
 
     GetOrdersResponse findByUser(String ref);
+
+    GetOrdersResponse getAllOrders();
 }

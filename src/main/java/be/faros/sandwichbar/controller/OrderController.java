@@ -14,4 +14,5 @@ public interface OrderController {
     ResponseEntity<GetOrderResponse> getOrder(int id, OidcUser principal);
 
     ResponseEntity<GetOrdersResponse> getOrdersByUser(OidcUser principal);
+    ResponseEntity<GetOrdersResponse> getAllOrders(OidcUser principal);
 }

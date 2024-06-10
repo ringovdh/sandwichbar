@@ -54,4 +54,12 @@ public class OrderControllerImpl implements OrderController {
         return ResponseEntity.ok().body(orderService.findByUser(principal.getName()));
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @GetMapping("/")
+    @Override
+    public ResponseEntity<GetOrdersResponse> getAllOrders(
+            @AuthenticationPrincipal OidcUser principal) {
+        return ResponseEntity.ok().body(orderService.getAllOrders());
+    }
+
 }
