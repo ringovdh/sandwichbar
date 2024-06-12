@@ -13,6 +13,7 @@ import be.faros.sandwichbar.entity.Product;
 import be.faros.sandwichbar.entity.Sandwich;
 import be.faros.sandwichbar.entity.User;
 import be.faros.sandwichbar.exception.InvalidOrderException;
+import be.faros.sandwichbar.exception.InvalidUserException;
 import be.faros.sandwichbar.mapper.OrderMapper;
 import be.faros.sandwichbar.repository.IngredientRepository;
 import be.faros.sandwichbar.repository.OrderRepository;
@@ -51,7 +52,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public CreateOrderResponse createOrder(CreateOrderRequest createOrderRequest, String ref) {
         User user = userRepository.findByUserRef(ref)
-                .orElseThrow(() -> new InvalidOrderException("unknown_user"));
+                .orElseThrow(() -> new InvalidUserException("unknown_user"));
         Order newOrder = createNewOrder(user, createOrderRequest);
         return new CreateOrderResponse(newOrder.getId());
     }
