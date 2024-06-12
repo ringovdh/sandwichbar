@@ -56,7 +56,6 @@ public class SecurityConfig {
         return successHandler;
     }
 
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http,
                                            OidcClientInitiatedLogoutSuccessHandler oidcLogoutSuccessHandler) throws Exception {

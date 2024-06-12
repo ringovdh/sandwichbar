@@ -1,8 +1,6 @@
 package be.faros.sandwichbar.entity;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -13,10 +11,6 @@ public class Ingredient extends BaseEntity {
     private String name;
     private int stock;
 
-
-    public String getCategory() {
-        return category;
-    }
 
     public void setCategory(String category) {
         this.category = category;

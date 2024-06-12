@@ -31,6 +31,7 @@ import static be.faros.sandwichbar.mother.ProductMother.createExistingCheeseSand
 import static be.faros.sandwichbar.mother.ProductMother.createExistingDrink;
 import static be.faros.sandwichbar.mother.ProductMother.createExistingDrinkOutOfStock;
 import static be.faros.sandwichbar.mother.UserMother.createExistingUserPino;
+import static be.faros.sandwichbar.mother.UserMother.createExistingUserTommy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -56,6 +57,7 @@ class OrderServiceTest extends SandwichbarTestBase {
 
     private final String userRef = "oAuth|1234";
     private final User user = createExistingUserPino();
+    private final User user2 = createExistingUserTommy();
 
 
     @Test
@@ -74,7 +76,7 @@ class OrderServiceTest extends SandwichbarTestBase {
 
     @Test
     @DisplayName("Find all orders by user")
-    public void findByUser() {
+    public void findAllOrdersByUser() {
         Order order1 = createOrder(user, List.of(createNewOrderItem(createExistingCheeseSandwich())));
         Order order2 = createOrder(user, List.of(createNewOrderItem(createExistingCheeseSandwich())));
 
@@ -83,6 +85,20 @@ class OrderServiceTest extends SandwichbarTestBase {
         GetOrdersResponse result = orderService.findByUser(userRef);
 
         verify(orderRepository).findByUser_userRef(userRef);
+        assertEquals(2, result.orders().size());
+    }
+
+    @Test
+    @DisplayName("Find all orders")
+    public void findAllOrders() {
+        Order order1 = createOrder(user, List.of(createNewOrderItem(createExistingCheeseSandwich())));
+        Order order2 = createOrder(user2, List.of(createNewOrderItem(createExistingCheeseSandwich())));
+
+        when(orderRepository.findAll()).thenReturn(List.of(order1, order2));
+
+        GetOrdersResponse result = orderService.getAllOrders();
+
+        verify(orderRepository).findAll();
         assertEquals(2, result.orders().size());
     }
 

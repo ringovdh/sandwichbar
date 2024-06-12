@@ -4,16 +4,17 @@ import be.faros.sandwichbar.dto.UserinfoDTO;
 import be.faros.sandwichbar.dto.request.UpdateUserRequest;
 import be.faros.sandwichbar.service.UserService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("users")
+@RequestMapping("/userInfo")
 public class UserControllerImpl implements UserController {
 
     private final UserService userService;
@@ -23,22 +24,18 @@ public class UserControllerImpl implements UserController {
     }
 
 
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     @GetMapping()
     @Override
     public ResponseEntity<UserinfoDTO> getUserInfo(@AuthenticationPrincipal OidcUser oidcUser) {
-        if (oidcUser != null) {
-            return ResponseEntity.ok(userService.getUserInfo(oidcUser));
-        } else {
-            return ResponseEntity.ok(null);
-        }
+        return ResponseEntity.ok(userService.getUserInfo(oidcUser));
     }
 
-    @PostMapping("/account")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @PutMapping("")
     @Override
-    public void updateUserAccount(@AuthenticationPrincipal OidcUser oidcUser, @RequestBody UpdateUserRequest updateUserRequest) {
-        if (oidcUser != null) {
-            userService.updateUser(oidcUser, updateUserRequest);
-        }
+    public void updateUserInfo(@AuthenticationPrincipal OidcUser oidcUser, @RequestBody UpdateUserRequest updateUserRequest) {
+            userService.updateUserInfo(oidcUser, updateUserRequest);
     }
 
 }

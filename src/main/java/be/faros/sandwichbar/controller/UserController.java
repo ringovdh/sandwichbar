@@ -9,5 +9,5 @@ public interface UserController {
 
     ResponseEntity<UserinfoDTO> getUserInfo(OidcUser oidcUser);
 
-    void updateUserAccount(OidcUser oidcUser, UpdateUserRequest updateUserRequest);
+    void updateUserInfo(OidcUser oidcUser, UpdateUserRequest updateUserRequest);
 }

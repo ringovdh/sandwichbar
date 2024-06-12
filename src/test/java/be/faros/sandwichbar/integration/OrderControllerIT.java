@@ -1,4 +1,4 @@
-package be.faros.sandwichbar.controller;
+package be.faros.sandwichbar.integration;
 
 import be.faros.sandwichbar.repository.IngredientRepository;
 import be.faros.sandwichbar.repository.OrderRepository;

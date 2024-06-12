@@ -8,5 +8,5 @@ public interface UserService {
 
     UserinfoDTO getUserInfo(OidcUser oidcUser);
 
-    void updateUser(OidcUser oidcUser, UpdateUserRequest updateUserRequest);
+    void updateUserInfo(OidcUser oidcUser, UpdateUserRequest updateUserRequest);
 }

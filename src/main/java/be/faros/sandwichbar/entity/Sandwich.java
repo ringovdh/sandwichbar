@@ -27,13 +27,7 @@ public class Sandwich extends Product {
         return ingredients;
     }
 
-    public void setIngredients(List<Ingredient> ingredients) {
-        this.ingredients = ingredients;
-    }
-
     public boolean isAvailable() {
-        return this.ingredients.stream().filter(i -> {
-            return i.getStock() == 0;
-        }).toList().isEmpty();
+        return this.ingredients.stream().filter(i -> i.getStock() == 0).toList().isEmpty();
     }
 }

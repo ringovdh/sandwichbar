@@ -30,6 +30,7 @@ public class OrderControllerImpl implements OrderController {
     }
 
 
+    @PreAuthorize("hasRole('ROLE_USER')")
     @PostMapping
     @Override
     public ResponseEntity<CreateOrderResponse> createOrder(
@@ -38,11 +39,11 @@ public class OrderControllerImpl implements OrderController {
         return ResponseEntity.ok().body(orderService.createOrder(order, principal.getName()));
     }
 
+    @PreAuthorize("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")
     @GetMapping("/{id}")
     @Override
     public ResponseEntity<GetOrderResponse> getOrder(
-            @PathVariable int id,
-            @AuthenticationPrincipal OidcUser principal) {
+            @PathVariable int id) {
         return ResponseEntity.ok().body(orderService.findById(id));
     }
 
@@ -55,10 +56,9 @@ public class OrderControllerImpl implements OrderController {
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @GetMapping("/")
+    @GetMapping()
     @Override
-    public ResponseEntity<GetOrdersResponse> getAllOrders(
-            @AuthenticationPrincipal OidcUser principal) {
+    public ResponseEntity<GetOrdersResponse> getAllOrders() {
         return ResponseEntity.ok().body(orderService.getAllOrders());
     }
 

@@ -35,7 +35,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateUser(OidcUser oidcUser, UpdateUserRequest updateUserRequest) {
+    public void updateUserInfo(OidcUser oidcUser, UpdateUserRequest updateUserRequest) {
         User user = userRepository.findByUserRef(oidcUser.getName())
                 .orElseThrow(() -> new EntityNotFoundException("user_not_found"));
         user.setUsername(updateUserRequest.username());
