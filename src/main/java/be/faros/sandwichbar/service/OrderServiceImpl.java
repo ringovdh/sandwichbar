@@ -90,9 +90,9 @@ public class OrderServiceImpl implements OrderService {
             OrderItem orderItem = new OrderItem();
             orderItem.setOrder(order);
             orderItem.setQuantity(i.quantity());
-            orderItem.setProductRef(i.productRef());
+            orderItem.setProductRef(i.product().getProductRef());
 
-            Optional<Product> product = productRepository.findByProductRef(i.productRef());
+            Optional<Product> product = productRepository.findByProductRef(i.product().getProductRef());
 
             //ToDO Update stock sandwiches on resourceserver
             if (product.isPresent() && product.get().getProductType().equals(ProductType.DRINK.name())) {

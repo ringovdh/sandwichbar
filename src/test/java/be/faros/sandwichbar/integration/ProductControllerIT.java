@@ -6,9 +6,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.util.List;
-
-import static be.faros.sandwichbar.mother.ProductMother.createImportedProductDTO;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -23,8 +20,6 @@ public class ProductControllerIT extends ControllerITBase {
             """)
     @DisplayName("Get all products")
     void getAllProducts() throws Exception {
-        String responseBody = objectMapper.writeValueAsString(List.of(createImportedProductDTO()));
-
 
         String result = mvc.perform(MockMvcRequestBuilders.get("/products"))
                 .andExpect(status().isOk())

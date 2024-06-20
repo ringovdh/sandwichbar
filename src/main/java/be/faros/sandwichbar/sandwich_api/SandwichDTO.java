@@ -5,7 +5,6 @@ import be.faros.sandwichbar.dto.IngredientDTO;
 import java.util.List;
 
 public record SandwichDTO(
-        int id,
         String name,
         String productRef,
         List<IngredientDTO> ingredients,

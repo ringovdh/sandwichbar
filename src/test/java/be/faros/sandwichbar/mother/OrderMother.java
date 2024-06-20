@@ -5,13 +5,10 @@ import be.faros.sandwichbar.entity.Order;
 import be.faros.sandwichbar.entity.OrderItem;
 import be.faros.sandwichbar.entity.Product;
 import be.faros.sandwichbar.entity.User;
-import be.faros.sandwichbar.mapper.ProductMapper;
 
 import java.util.List;
 
 public class OrderMother {
-
-    private static final ProductMapper productMapper = new ProductMapper();
 
     public static Order createOrder(User user, List<OrderItem> items) {
         Order order = new Order();

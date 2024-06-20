@@ -12,7 +12,6 @@ public class ProductMapper {
 
     public static ProductDTO mapProductToDTO(Product product) {
         return new ProductDTO(
-                product.getId(),
                 product.getName(),
                 product.getProductRef(),
                 product.getPrice(),
@@ -23,7 +22,6 @@ public class ProductMapper {
 
     public ProductDTO mapDrinkToProductDTO(Drink drink) {
         return new ProductDTO(
-                drink.getId(),
                 drink.getName(),
                 drink.getProductRef(),
                 drink.getPrice(),
@@ -34,7 +32,6 @@ public class ProductMapper {
 
     public static ProductDTO mapSandwichDTOToProductDTO(SandwichDTO sandwich) {
         return new ProductDTO(
-                sandwich.id(),
                 sandwich.name(),
                 sandwich.productRef(),
                 sandwich.price(),
