@@ -1,32 +1,28 @@
 package be.faros.sandwichbar.mother;
 
+import be.faros.sandwichbar.dto.ProductDTO;
 import be.faros.sandwichbar.entity.Drink;
 import be.faros.sandwichbar.entity.Product;
-import be.faros.sandwichbar.entity.Sandwich;
 
-import java.util.Arrays;
-
-import static be.faros.sandwichbar.mother.IngredientMother.getCheddar;
-import static be.faros.sandwichbar.mother.IngredientMother.getTomatoes;
+import static be.faros.sandwichbar.mapper.ProductMapper.mapProductToDTO;
 
 public class ProductMother {
 
-    public static Product createNewCheeseSandwich() {
-        return new Sandwich(
+    public static Product createImportedProduct() {
+        return new Product(
                 "CheeseSandwich",
-                4.5,
-                Arrays.asList(getTomatoes(), getCheddar()));
+                "PRD-001",
+                4.5);
     }
 
-    public static Product createExistingCheeseSandwich() {
-        Product sandwich = createNewCheeseSandwich();
-        sandwich.setId(10);
-        return sandwich;
+    public static ProductDTO createImportedProductDTO() {
+        return mapProductToDTO(createImportedProduct());
     }
 
     public static Drink createNewDrink() {
         return new Drink(
                 "Coca-Cola",
+                "DRK-0001",
                 2.5,
                 5);
     }

@@ -33,10 +33,6 @@ public class Order extends BaseEntity {
     }
 
     public double getOrderTotal() {
-        return this.items.stream()
-                .map(o -> {
-                    return o.getQuantity() * (o.getProduct().getPrice());
-                })
-                .reduce(0D, Double::sum);
+        return 0D;
     }
 }

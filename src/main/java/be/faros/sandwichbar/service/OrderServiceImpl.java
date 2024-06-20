@@ -6,16 +6,14 @@ import be.faros.sandwichbar.dto.response.CreateOrderResponse;
 import be.faros.sandwichbar.dto.response.GetOrderResponse;
 import be.faros.sandwichbar.dto.response.GetOrdersResponse;
 import be.faros.sandwichbar.entity.Drink;
-import be.faros.sandwichbar.entity.Ingredient;
 import be.faros.sandwichbar.entity.Order;
 import be.faros.sandwichbar.entity.OrderItem;
 import be.faros.sandwichbar.entity.Product;
-import be.faros.sandwichbar.entity.Sandwich;
+import be.faros.sandwichbar.entity.ProductType;
 import be.faros.sandwichbar.entity.User;
 import be.faros.sandwichbar.exception.InvalidOrderException;
 import be.faros.sandwichbar.exception.InvalidUserException;
 import be.faros.sandwichbar.mapper.OrderMapper;
-import be.faros.sandwichbar.repository.IngredientRepository;
 import be.faros.sandwichbar.repository.OrderRepository;
 import be.faros.sandwichbar.repository.ProductRepository;
 import be.faros.sandwichbar.repository.UserRepository;
@@ -25,6 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -33,19 +32,16 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final UserRepository userRepository;
     private final OrderMapper orderMapper;
-    private final IngredientRepository ingredientRepository;
     private final ProductRepository productRepository;
 
 
     @Autowired
     public OrderServiceImpl(OrderRepository orderRepository,
                             UserRepository userRepository,
-                            IngredientRepository ingredientRepository,
                             ProductRepository productRepository) {
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
         this.orderMapper = new OrderMapper();
-        this.ingredientRepository = ingredientRepository;
         this.productRepository = productRepository;
     }
 
@@ -94,15 +90,13 @@ public class OrderServiceImpl implements OrderService {
             OrderItem orderItem = new OrderItem();
             orderItem.setOrder(order);
             orderItem.setQuantity(i.quantity());
+            orderItem.setProductRef(i.productRef());
 
-            Product product = productRepository.findById(i.productId()).orElseThrow(() -> new InvalidOrderException("unknown_product"));
-            orderItem.setProduct(product);
+            Optional<Product> product = productRepository.findByProductRef(i.productRef());
 
-            if (product.getProductType().equals("SANDWICH")) {
-                Sandwich sandwich = (Sandwich) product;
-                updateStock(sandwich.getIngredients(), i.quantity());
-            } else {
-                Drink drink = (Drink) product;
+            //ToDO Update stock sandwiches on resourceserver
+            if (product.isPresent() && product.get().getProductType().equals(ProductType.DRINK.name())) {
+                Drink drink = (Drink) product.get();
                 if (drink.getStock() > i.quantity()) {
                     drink.setStock(drink.getStock() - i.quantity());
                     productRepository.save(drink);
@@ -116,15 +110,4 @@ public class OrderServiceImpl implements OrderService {
         return orderItems;
     }
 
-    private void updateStock(List<Ingredient> ingredients, int quantity) {
-        ingredients.forEach(ingr -> {
-            Ingredient ingredient = ingredientRepository.findById(ingr.getId())
-                    .orElseThrow(() -> new InvalidOrderException("unknown_ingredient"));
-            if (ingredient.getStock() - quantity < 0) {
-                throw new InvalidOrderException("out_of_stock_ingredient");
-            }
-            ingredient.setStock(ingredient.getStock() - quantity);
-            ingredientRepository.save(ingredient);
-        });
-    }
 }

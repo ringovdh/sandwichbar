@@ -4,13 +4,11 @@ import be.faros.sandwichbar.dto.request.CreateOrderItemDTO;
 import be.faros.sandwichbar.dto.request.CreateOrderRequest;
 import be.faros.sandwichbar.dto.response.GetOrderResponse;
 import be.faros.sandwichbar.dto.response.GetOrdersResponse;
-import be.faros.sandwichbar.entity.Ingredient;
 import be.faros.sandwichbar.entity.Order;
 import be.faros.sandwichbar.entity.OrderItem;
 import be.faros.sandwichbar.entity.Product;
 import be.faros.sandwichbar.entity.User;
 import be.faros.sandwichbar.exception.InvalidOrderException;
-import be.faros.sandwichbar.repository.IngredientRepository;
 import be.faros.sandwichbar.repository.OrderRepository;
 import be.faros.sandwichbar.repository.ProductRepository;
 import be.faros.sandwichbar.repository.UserRepository;
@@ -23,11 +21,9 @@ import java.util.List;
 import java.util.Optional;
 
 import static be.faros.sandwichbar.mother.AddressMother.createAddressDTO;
-import static be.faros.sandwichbar.mother.IngredientMother.getCheddar;
-import static be.faros.sandwichbar.mother.IngredientMother.getTomatoes;
 import static be.faros.sandwichbar.mother.OrderMother.createNewOrderItem;
 import static be.faros.sandwichbar.mother.OrderMother.createOrder;
-import static be.faros.sandwichbar.mother.ProductMother.createExistingCheeseSandwich;
+import static be.faros.sandwichbar.mother.ProductMother.createImportedProduct;
 import static be.faros.sandwichbar.mother.ProductMother.createExistingDrink;
 import static be.faros.sandwichbar.mother.ProductMother.createExistingDrinkOutOfStock;
 import static be.faros.sandwichbar.mother.UserMother.createExistingUserPino;
@@ -49,9 +45,6 @@ class OrderServiceTest extends SandwichbarTestBase {
     @Mock
     ProductRepository productRepository;
 
-    @Mock
-    IngredientRepository ingredientRepository;
-
     @InjectMocks
     OrderServiceImpl orderService;
 
@@ -63,7 +56,7 @@ class OrderServiceTest extends SandwichbarTestBase {
     @Test
     @DisplayName("Find an order by id")
     public void findOrderById() {
-        Order order = createOrder(user, List.of(createNewOrderItem(createExistingCheeseSandwich())));
+        Order order = createOrder(user, List.of(createNewOrderItem(createExistingDrink())));
 
         when(orderRepository.findById(order.getId())).thenReturn(Optional.of(order));
 
@@ -77,8 +70,8 @@ class OrderServiceTest extends SandwichbarTestBase {
     @Test
     @DisplayName("Find all orders by user")
     public void findAllOrdersByUser() {
-        Order order1 = createOrder(user, List.of(createNewOrderItem(createExistingCheeseSandwich())));
-        Order order2 = createOrder(user, List.of(createNewOrderItem(createExistingCheeseSandwich())));
+        Order order1 = createOrder(user, List.of(createNewOrderItem(createExistingDrink())));
+        Order order2 = createOrder(user, List.of(createNewOrderItem(createExistingDrink())));
 
         when(orderRepository.findByUser_userRef(userRef)).thenReturn(List.of(order1, order2));
 
@@ -91,8 +84,8 @@ class OrderServiceTest extends SandwichbarTestBase {
     @Test
     @DisplayName("Find all orders")
     public void findAllOrders() {
-        Order order1 = createOrder(user, List.of(createNewOrderItem(createExistingCheeseSandwich())));
-        Order order2 = createOrder(user2, List.of(createNewOrderItem(createExistingCheeseSandwich())));
+        Order order1 = createOrder(user, List.of(createNewOrderItem(createImportedProduct())));
+        Order order2 = createOrder(user2, List.of(createNewOrderItem(createImportedProduct())));
 
         when(orderRepository.findAll()).thenReturn(List.of(order1, order2));
 
@@ -105,10 +98,8 @@ class OrderServiceTest extends SandwichbarTestBase {
     @Test
     @DisplayName("Create new order")
     public void createNewOrder() {
-        Product sandwich = createExistingCheeseSandwich();
-        Ingredient tomato = getTomatoes();
-        Ingredient cheddar = getCheddar();
-        OrderItem orderItem1 = createNewOrderItem(sandwich);
+        Product importedProduct = createImportedProduct();
+        OrderItem orderItem1 = createNewOrderItem(importedProduct);
         Product drink = createExistingDrink();
         OrderItem orderItem2 = createNewOrderItem(drink);
         Order savedOrder = new Order();
@@ -116,25 +107,21 @@ class OrderServiceTest extends SandwichbarTestBase {
         savedOrder.setUser(user);
         savedOrder.setItems(List.of(orderItem1, orderItem2));
         CreateOrderRequest request = new CreateOrderRequest(
-                List.of(new CreateOrderItemDTO(1, sandwich.getId()),
-                        new CreateOrderItemDTO(1, drink.getId())),
+                List.of(new CreateOrderItemDTO(1, importedProduct.getProductRef()),
+                        new CreateOrderItemDTO(1, drink.getProductRef())),
                 createAddressDTO()
         );
 
         when(userRepository.findByUserRef(userRef)).thenReturn(Optional.of(user));
-        when(productRepository.findById(sandwich.getId())).thenReturn(Optional.of(sandwich));
-        when(ingredientRepository.findById(tomato.getId())).thenReturn(Optional.of(tomato));
-        when(ingredientRepository.findById(cheddar.getId())).thenReturn(Optional.of(cheddar));
-        when(productRepository.findById(drink.getId())).thenReturn(Optional.of(drink));
+        when(productRepository.findByProductRef(importedProduct.getProductRef())).thenReturn(Optional.empty());
+        when(productRepository.findByProductRef(drink.getProductRef())).thenReturn(Optional.of(drink));
         when(orderRepository.save(any(Order.class))).thenReturn(savedOrder);
 
         orderService.createOrder(request, userRef);
 
         verify(userRepository).findByUserRef(userRef);
-        verify(productRepository).findById(sandwich.getId());
-        verify(productRepository).findById(drink.getId());
-        verify(ingredientRepository).findById(tomato.getId());
-        verify(ingredientRepository).findById(cheddar.getId());
+        verify(productRepository).findByProductRef(importedProduct.getProductRef());
+        verify(productRepository).findByProductRef(drink.getProductRef());
     }
 
     @Test
@@ -143,44 +130,19 @@ class OrderServiceTest extends SandwichbarTestBase {
         Product drink = createExistingDrinkOutOfStock();
 
         CreateOrderRequest request = new CreateOrderRequest(
-                List.of(new CreateOrderItemDTO(1, drink.getId())),
+                List.of(new CreateOrderItemDTO(1, drink.getProductRef())),
                 createAddressDTO()
         );
 
         when(userRepository.findByUserRef(userRef)).thenReturn(Optional.of(user));
-        when(productRepository.findById(drink.getId())).thenReturn(Optional.of(drink));
+        when(productRepository.findByProductRef(drink.getProductRef())).thenReturn(Optional.of(drink));
 
         InvalidOrderException exception = assertThrows(InvalidOrderException.class, () ->
                 orderService.createOrder(request, userRef)
         );
         verify(userRepository).findByUserRef(userRef);
-        verify(productRepository).findById(drink.getId());
+        verify(productRepository).findByProductRef(drink.getProductRef());
         assertEquals("out_of_stock_drink", exception.getMessage());
     }
 
-    @Test
-    @DisplayName("Create new order when ingredient is out of stock")
-    public void createNewOrder_whenIngredientIsOutOfStock_throwsInvalidOrderException() {
-        Product sandwich = createExistingCheeseSandwich();
-        Ingredient tomato = getTomatoes();
-        tomato.setStock(0);
-
-        CreateOrderRequest request = new CreateOrderRequest(
-                List.of(new CreateOrderItemDTO(1, sandwich.getId())),
-                createAddressDTO()
-        );
-
-        when(userRepository.findByUserRef(userRef)).thenReturn(Optional.of(user));
-        when(productRepository.findById(sandwich.getId())).thenReturn(Optional.of(sandwich));
-        when(ingredientRepository.findById(tomato.getId())).thenReturn(Optional.of(tomato));
-
-        InvalidOrderException exception = assertThrows(InvalidOrderException.class, () ->
-                orderService.createOrder(request, userRef)
-        );
-
-        verify(userRepository).findByUserRef(userRef);
-        verify(productRepository).findById(sandwich.getId());
-        verify(ingredientRepository).findById(tomato.getId());
-        assertEquals("out_of_stock_ingredient", exception.getMessage());
-    }
 }

@@ -11,8 +11,8 @@ public class Drink extends Product {
 
     public Drink() { }
 
-    public Drink(String name, double price, int stock) {
-        super(name, price);
+    public Drink(String name, String productRef, double price, int stock) {
+        super(name, productRef, price);
         this.stock = stock;
     }
 

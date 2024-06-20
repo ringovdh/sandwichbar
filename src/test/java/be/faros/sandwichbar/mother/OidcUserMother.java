@@ -10,7 +10,7 @@ public class OidcUserMother {
     public static OidcUser createOidcUser_userRole() {
         return  new DefaultOidcUser(
                 AuthorityUtils.createAuthorityList("ROLE_USER"),
-                OidcIdToken.withTokenValue("id-token").claim("email", "user@sandwich.be").build(),
+                OidcIdToken.withTokenValue("id-token").claim("email", "user12@sandwich.be").build(),
                 "email");
     }
 

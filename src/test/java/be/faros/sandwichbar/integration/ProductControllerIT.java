@@ -6,22 +6,25 @@ import org.junit.jupiter.api.Test;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.util.List;
+
+import static be.faros.sandwichbar.mother.ProductMother.createImportedProductDTO;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+
 public class ProductControllerIT extends ControllerITBase {
+
+
 
     @Test
     @Sql(statements = """
-            INSERT INTO ingredient(id, category, name, stock) VALUES (1, 'Vegetables', 'Tomato', 3);
-            INSERT INTO ingredient(id, category, name, stock) VALUES (2, 'Cheese', 'Cheddar', 5);
-            INSERT INTO product(id, name, price, product_type) VALUES (10, 'Cheese sandwich', 4.5, 'SANDWICH');
-            INSERT INTO product(id, name, price, stock, product_type) VALUES (20, 'Coca-Cola', 2.5, 5, 'DRINK');
-            INSERT INTO product_ingredient(id, product_id, ingredient_id) VALUES (1, 10, 1);
-            INSERT INTO product_ingredient(id, product_id, ingredient_id) VALUES (2, 10, 2);
+            INSERT INTO product(id, name, product_ref, price, stock, product_type) VALUES (20, 'Coca-Cola', 'PRD-001', 2.5, 5, 'DRINK');
             """)
     @DisplayName("Get all products")
     void getAllProducts() throws Exception {
+        String responseBody = objectMapper.writeValueAsString(List.of(createImportedProductDTO()));
+
 
         String result = mvc.perform(MockMvcRequestBuilders.get("/products"))
                 .andExpect(status().isOk())

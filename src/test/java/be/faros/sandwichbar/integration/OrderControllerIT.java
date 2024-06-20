@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static be.faros.sandwichbar.mother.OrderMother.createNewCreateOrderItemDTO;
-import static be.faros.sandwichbar.mother.ProductMother.createExistingCheeseSandwich;
+import static be.faros.sandwichbar.mother.ProductMother.createImportedProduct;
 import static be.faros.sandwichbar.mother.ProductMother.createExistingDrink;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
@@ -39,18 +39,14 @@ public class OrderControllerIT extends ControllerITBase {
     @Test
     @Sql(statements = """
             INSERT INTO "user"(id, name, username, email, user_ref) VALUES(1, 'User from Sandwichbar', 'User', 'user@sandwich.be', 'user@sandwich.be');
-            INSERT INTO ingredient(id, category, name, stock) VALUES (1, 'Vegetables', 'Tomato', 3);
-            INSERT INTO ingredient(id, category, name, stock) VALUES (2, 'Cheese', 'Cheddar', 5);
-            INSERT INTO product(id, name, price, product_type) VALUES (10, 'Cheese sandwich', 4.5, 'SANDWICH');
-            INSERT INTO product(id, name, price, stock, product_type) VALUES (20, 'Coca-Cola', 2.5, 5, 'DRINK');
-            INSERT INTO product_ingredient(id, product_id, ingredient_id) VALUES (1, 10, 1);
-            INSERT INTO product_ingredient(id, product_id, ingredient_id) VALUES (2, 10, 2);
+            INSERT INTO product(id, name, product_ref, price, product_type) VALUES (10, 'Cheese sandwich', 'PRD-001', 4.5, 'SANDWICH');
+            INSERT INTO product(id, name, product_ref, price, stock, product_type) VALUES (20, 'Coca-Cola', 'PRD-002', 2.5, 5, 'DRINK');
             """)
     @DisplayName("Create an order")
     @Transactional
     public void createOrder() throws Exception {
         CreateOrderRequest order = new CreateOrderRequest(List.of(
-                createNewCreateOrderItemDTO(createExistingCheeseSandwich()),
+                createNewCreateOrderItemDTO(createImportedProduct()),
                 createNewCreateOrderItemDTO(createExistingDrink())),null);
         String valueAsJson = objectMapper.writeValueAsString(order);
 
@@ -76,15 +72,9 @@ public class OrderControllerIT extends ControllerITBase {
     @Test
     @Sql(statements = """
             INSERT INTO "user"(id, name, username, email, user_ref) VALUES(1, 'User from Sandwichbar', 'User', 'user@sandwich.be', 'user@sandwich.be');
-            INSERT INTO ingredient(id, category, name, stock) VALUES(1, 'Vegetables', 'Tomato', 3);
-            INSERT INTO ingredient(id, category, name, stock) VALUES(2, 'Cheese', 'Cheddar', 5);
-            INSERT INTO product(id, name, price, product_type) VALUES(10, 'Cheese sandwich', 4.5, 'SANDWICH');
-            INSERT INTO product(id, name, price, stock, product_type) VALUES(20, 'Coca-Cola', 2.5, 5, 'DRINK');
-            INSERT INTO product_ingredient(id, product_id, ingredient_id) VALUES(1, 10, 1);
-            INSERT INTO product_ingredient(id, product_id, ingredient_id) VALUES(2, 10, 2);
             INSERT INTO "order"(id, user_id) VALUES (1, 1);
-            INSERT INTO orderitem(id, order_id, quantity, product_id) VALUES(1, 1, 1, 10);
-            INSERT INTO orderitem(id, order_id, quantity, product_id) VALUES(2, 1, 1, 20);
+            INSERT INTO orderitem(id, order_id, quantity, product_ref) VALUES(1, 1, 1, 'PRD-001');
+            INSERT INTO orderitem(id, order_id, quantity, product_ref) VALUES(2, 1, 1, 'PRD-002');
             """)
     @DisplayName("Get an order by id")
     @Transactional
@@ -107,16 +97,10 @@ public class OrderControllerIT extends ControllerITBase {
     @Test
     @Sql(statements = """
             INSERT INTO "user"(id, name, username, email, user_ref) VALUES(1, 'User from Sandwichbar', 'User', 'user@sandwich.be', 'user@sandwich.be');
-            INSERT INTO ingredient(id, category, name, stock) VALUES(1, 'Vegetables', 'Tomato', 3);
-            INSERT INTO ingredient(id, category, name, stock) VALUES(2, 'Cheese', 'Cheddar', 5);
-            INSERT INTO product(id, name, price, product_type) VALUES(10, 'Cheese sandwich', 4.5, 'SANDWICH');
-            INSERT INTO product(id, name, price, stock, product_type) VALUES(20, 'Coca-Cola', 2.5, 5, 'DRINK');
-            INSERT INTO product_ingredient(id, product_id, ingredient_id) VALUES(1, 10, 1);
-            INSERT INTO product_ingredient(id, product_id, ingredient_id) VALUES(2, 10, 2);
             INSERT INTO "order"(id, user_id) VALUES (1, 1);
             INSERT INTO "order"(id, user_id) VALUES (2, 1);
-            INSERT INTO orderitem(id, order_id, quantity, product_id) VALUES(1, 1, 1, 10);
-            INSERT INTO orderitem(id, order_id, quantity, product_id) VALUES(2, 2, 1, 20);
+            INSERT INTO orderitem(id, order_id, quantity, product_ref) VALUES(1, 1, 1, 'PRD-001');
+            INSERT INTO orderitem(id, order_id, quantity, product_ref) VALUES(2, 2, 1, 'PRD-002');
             """)
     @DisplayName("Get all orders by user")
     @Transactional
@@ -138,16 +122,10 @@ public class OrderControllerIT extends ControllerITBase {
     @Sql(statements = """
             INSERT INTO "user"(id, name, username, email, user_ref) VALUES(1, 'User 1 from Sandwichbar', 'User1', 'user1@sandwich.be', 'user1@sandwich.be');
             INSERT INTO "user"(id, name, username, email, user_ref) VALUES(2, 'User 2 from Sandwichbar', 'User2', 'user2@sandwich.be', 'user2@sandwich.be');
-            INSERT INTO ingredient(id, category, name, stock) VALUES(1, 'Vegetables', 'Tomato', 3);
-            INSERT INTO ingredient(id, category, name, stock) VALUES(2, 'Cheese', 'Cheddar', 5);
-            INSERT INTO product(id, name, price, product_type) VALUES(10, 'Cheese sandwich', 4.5, 'SANDWICH');
-            INSERT INTO product(id, name, price, stock, product_type) VALUES(20, 'Coca-Cola', 2.5, 5, 'DRINK');
-            INSERT INTO product_ingredient(id, product_id, ingredient_id) VALUES(1, 10, 1);
-            INSERT INTO product_ingredient(id, product_id, ingredient_id) VALUES(2, 10, 2);
             INSERT INTO "order"(id, user_id) VALUES (1, 1);
             INSERT INTO "order"(id, user_id) VALUES (2, 2);
-            INSERT INTO orderitem(id, order_id, quantity, product_id) VALUES(1, 1, 1, 10);
-            INSERT INTO orderitem(id, order_id, quantity, product_id) VALUES(2, 2, 1, 20);
+            INSERT INTO orderitem(id, order_id, quantity, product_ref) VALUES(1, 1, 1, 'PRD-001');
+            INSERT INTO orderitem(id, order_id, quantity, product_ref) VALUES(2, 2, 1, 'PRD-002');
             """)
     @DisplayName("Get all orders as admin")
     @Transactional

@@ -11,7 +11,7 @@ public class OrderItemMapper {
         return new OrderItemDTO(
                 orderItem.getId(),
                 orderItem.getQuantity(),
-                productMapper.mapToDTO(orderItem.getProduct())
+                orderItem.getProductRef()
         );
     }
 }

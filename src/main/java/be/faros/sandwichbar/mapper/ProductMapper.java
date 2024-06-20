@@ -3,21 +3,20 @@ package be.faros.sandwichbar.mapper;
 import be.faros.sandwichbar.dto.ProductDTO;
 import be.faros.sandwichbar.entity.Drink;
 import be.faros.sandwichbar.entity.Product;
-import be.faros.sandwichbar.entity.Sandwich;
+import be.faros.sandwichbar.entity.ProductType;
+import be.faros.sandwichbar.sandwich_api.SandwichDTO;
 
 import java.util.ArrayList;
 
 public class ProductMapper {
 
-    private final IngredientMapper ingredientMapper = new IngredientMapper();
-
-    public ProductDTO mapToDTO(Product product) {
+    public static ProductDTO mapProductToDTO(Product product) {
         return new ProductDTO(
                 product.getId(),
                 product.getName(),
+                product.getProductRef(),
                 product.getPrice(),
-                product.getProductType(),
-                0,
+                ProductType.DRINK.name(),
                 new ArrayList<>()
         );
     }
@@ -26,21 +25,21 @@ public class ProductMapper {
         return new ProductDTO(
                 drink.getId(),
                 drink.getName(),
+                drink.getProductRef(),
                 drink.getPrice(),
-                drink.getProductType(),
-                drink.getStock(),
+                ProductType.DRINK.name(),
                 new ArrayList<>()
         );
     }
 
-    public ProductDTO mapSandwichToProductDTO(Sandwich sandwich) {
+    public static ProductDTO mapSandwichDTOToProductDTO(SandwichDTO sandwich) {
         return new ProductDTO(
-                sandwich.getId(),
-                sandwich.getName(),
-                sandwich.getPrice(),
-                sandwich.getProductType(),
-                0,
-                sandwich.getIngredients().stream().map(ingredientMapper::mapToDTO).toList()
+                sandwich.id(),
+                sandwich.name(),
+                sandwich.productRef(),
+                sandwich.price(),
+                ProductType.SANDWICH.name(),
+                sandwich.ingredients()
         );
     }
 }

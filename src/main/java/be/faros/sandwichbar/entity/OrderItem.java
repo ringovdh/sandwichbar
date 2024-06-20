@@ -12,9 +12,7 @@ public class OrderItem extends BaseEntity {
 
     private int quantity;
 
-    @OneToOne
-    @JoinColumn(name = "product_id", referencedColumnName = "id")
-    private Product product;
+    private String productRef;
 
 
     public Order getOrder() {
@@ -33,11 +31,11 @@ public class OrderItem extends BaseEntity {
         this.quantity = quantity;
     }
 
-    public Product getProduct() {
-        return product;
+    public String getProductRef() {
+        return productRef;
     }
 
-    public void setProduct(Product product) {
-        this.product = product;
+    public void setProductRef(String productRef) {
+        this.productRef = productRef;
     }
 }

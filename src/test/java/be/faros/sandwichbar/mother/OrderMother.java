@@ -24,12 +24,12 @@ public class OrderMother {
     public static OrderItem createNewOrderItem(Product product) {
         OrderItem orderItem = new OrderItem();
         orderItem.setQuantity(1);
-        orderItem.setProduct(product);
+        orderItem.setProductRef(product.getProductRef());
         return orderItem;
     }
 
     public static CreateOrderItemDTO createNewCreateOrderItemDTO(Product product) {
-        return new CreateOrderItemDTO(1, product.getId());
+        return new CreateOrderItemDTO(1, product.getProductRef());
     }
 
 }

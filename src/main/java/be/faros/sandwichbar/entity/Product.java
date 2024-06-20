@@ -15,14 +15,17 @@ public class Product extends BaseEntity {
 
     private String name;
 
+    private String productRef;
+
     private double price;
 
 
     public Product() {
     }
 
-    public Product(String name, double price) {
+    public Product(String name, String productRef, double price) {
         this.name = name;
+        this.productRef = productRef;
         this.price = price;
     }
 
@@ -32,6 +35,14 @@ public class Product extends BaseEntity {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getProductRef() {
+        return productRef;
+    }
+
+    public void setProductRef(String productRef) {
+        this.productRef = productRef;
     }
 
     public double getPrice() {
