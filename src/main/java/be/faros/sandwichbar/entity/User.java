@@ -11,9 +11,9 @@ public class User extends BaseEntity {
     private String email;
     @Column(name="user_ref")
     private String userRef;
-    @ManyToOne
-    @JoinColumn(name = "company_id")
-    private Company company;
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "address_id")
+    private Address address;
 
 
     public String getName() {
@@ -48,11 +48,11 @@ public class User extends BaseEntity {
         this.userRef = userRef;
     }
 
-    public Company getCompany() {
-        return company;
+    public Address getAddress() {
+        return address;
     }
 
-    public void setCompany(Company company) {
-        this.company = company;
+    public void setAddress(Address address) {
+        this.address = address;
     }
 }

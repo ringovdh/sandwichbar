@@ -26,7 +26,7 @@ import static be.faros.sandwichbar.mother.OrderMother.createOrder;
 import static be.faros.sandwichbar.mother.ProductMother.createImportedProduct;
 import static be.faros.sandwichbar.mother.ProductMother.createExistingDrink;
 import static be.faros.sandwichbar.mother.ProductMother.createExistingDrinkOutOfStock;
-import static be.faros.sandwichbar.mother.UserMother.createExistingUserPino;
+import static be.faros.sandwichbar.mother.UserMother.createExistingUser1;
 import static be.faros.sandwichbar.mother.UserMother.createExistingUserTommy;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -49,7 +49,7 @@ class OrderServiceTest extends SandwichbarTestBase {
     OrderServiceImpl orderService;
 
     private final String userRef = "oAuth|1234";
-    private final User user = createExistingUserPino();
+    private final User user = createExistingUser1();
     private final User user2 = createExistingUserTommy();
 
 
@@ -107,8 +107,8 @@ class OrderServiceTest extends SandwichbarTestBase {
         savedOrder.setUser(user);
         savedOrder.setItems(List.of(orderItem1, orderItem2));
         CreateOrderRequest request = new CreateOrderRequest(
-                List.of(new CreateOrderItemDTO(1, importedProduct.getProductRef()),
-                        new CreateOrderItemDTO(1, drink.getProductRef())),
+                List.of(new CreateOrderItemDTO(1, importedProduct),
+                        new CreateOrderItemDTO(1, drink)),
                 createAddressDTO()
         );
 
@@ -130,7 +130,7 @@ class OrderServiceTest extends SandwichbarTestBase {
         Product drink = createExistingDrinkOutOfStock();
 
         CreateOrderRequest request = new CreateOrderRequest(
-                List.of(new CreateOrderItemDTO(1, drink.getProductRef())),
+                List.of(new CreateOrderItemDTO(1, drink)),
                 createAddressDTO()
         );
 

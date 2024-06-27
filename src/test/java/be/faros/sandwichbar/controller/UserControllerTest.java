@@ -1,7 +1,9 @@
 package be.faros.sandwichbar.controller;
 
+import be.faros.sandwichbar.dto.AddressDTO;
 import be.faros.sandwichbar.dto.UserinfoDTO;
 import be.faros.sandwichbar.dto.request.UpdateUserRequest;
+import be.faros.sandwichbar.service.AddressService;
 import be.faros.sandwichbar.service.UserServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -9,6 +11,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import static be.faros.sandwichbar.mother.AddressMother.createAddressDTO;
+import static be.faros.sandwichbar.mother.UserMother.createUpdateUserRequest;
 import static java.util.Collections.emptyList;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.never;
@@ -22,6 +26,8 @@ class UserControllerTest extends ControllerTestBase {
 
     @MockBean
     private UserServiceImpl userService;
+    @MockBean
+    private AddressService addressService;
 
     private final String GET_USERINFO_URL = "/userInfo";
     private final String UPDATE_USERINFO_URL = "/userInfo";
@@ -29,7 +35,7 @@ class UserControllerTest extends ControllerTestBase {
     @Test
     @DisplayName("Get userInfo as user")
     void getUserInfo_asUser_success() throws Exception {
-        when(userService.getUserInfo(eq(user))).thenReturn(new UserinfoDTO("abc-001", "", user.getEmail(), emptyList()));
+        when(userService.getUserInfo(eq(user))).thenReturn(new UserinfoDTO("abc-001", "", user.getEmail(), "", createAddressDTO(), emptyList()));
 
         mvc.perform(MockMvcRequestBuilders.get(GET_USERINFO_URL)
                         .with(oidcLogin().oidcUser(user)))
@@ -41,7 +47,7 @@ class UserControllerTest extends ControllerTestBase {
     @Test
     @DisplayName("Get userInfo as admin")
     void getUserInfo_asAdmin_success() throws Exception {
-        when(userService.getUserInfo(eq(admin))).thenReturn(new UserinfoDTO("abc-001", "", admin.getEmail(), emptyList()));
+        when(userService.getUserInfo(eq(admin))).thenReturn(new UserinfoDTO("abc-001", "", admin.getEmail(), "", createAddressDTO(), emptyList()));
 
         mvc.perform(MockMvcRequestBuilders.get(GET_USERINFO_URL)
                         .with(oidcLogin().oidcUser(admin)))
@@ -63,7 +69,8 @@ class UserControllerTest extends ControllerTestBase {
     @Test
     @DisplayName("Update userInfo as user")
     void updateUserInfo_succes() throws Exception {
-        UpdateUserRequest updateUserRequest = new UpdateUserRequest("My username");
+        AddressDTO address = createAddressDTO();
+        UpdateUserRequest updateUserRequest = createUpdateUserRequest(address);
         String valueAsJson = objectMapper.writeValueAsString(updateUserRequest);
 
         mvc.perform(MockMvcRequestBuilders.put(UPDATE_USERINFO_URL)
@@ -78,7 +85,8 @@ class UserControllerTest extends ControllerTestBase {
     @Test
     @DisplayName("Update userInfo as admin")
     void updateUserInfo_wrongRole() throws Exception {
-        UpdateUserRequest updateUserRequest = new UpdateUserRequest("My username");
+        AddressDTO address = createAddressDTO();
+        UpdateUserRequest updateUserRequest = createUpdateUserRequest(address);
         String valueAsJson = objectMapper.writeValueAsString(updateUserRequest);
 
         mvc.perform(MockMvcRequestBuilders.put(UPDATE_USERINFO_URL)
@@ -88,12 +96,14 @@ class UserControllerTest extends ControllerTestBase {
                 .andExpect(status().isForbidden());
 
         verify(userService, never()).updateUserInfo(eq(admin), eq(updateUserRequest));
+        verify(addressService, never()).handleAddress(eq(updateUserRequest.address()));
     }
 
     @Test
     @DisplayName("Update userInfo without authentication")
     void updateUserInfo_accessDenied() throws Exception {
-        UpdateUserRequest updateUserRequest = new UpdateUserRequest("My username");
+        AddressDTO address = createAddressDTO();
+        UpdateUserRequest updateUserRequest = createUpdateUserRequest(address);
         String valueAsJson = objectMapper.writeValueAsString(updateUserRequest);
 
         mvc.perform(MockMvcRequestBuilders.put(UPDATE_USERINFO_URL)
@@ -102,6 +112,7 @@ class UserControllerTest extends ControllerTestBase {
                 .andExpect(status().is3xxRedirection());
 
         verify(userService, never()).updateUserInfo(eq(admin), eq(updateUserRequest));
+        verify(addressService, never()).handleAddress(eq(updateUserRequest.address()));
     }
 
 }

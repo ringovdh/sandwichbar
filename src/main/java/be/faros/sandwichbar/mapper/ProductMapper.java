@@ -1,7 +1,6 @@
 package be.faros.sandwichbar.mapper;
 
 import be.faros.sandwichbar.dto.ProductDTO;
-import be.faros.sandwichbar.entity.Drink;
 import be.faros.sandwichbar.entity.Product;
 import be.faros.sandwichbar.entity.ProductType;
 import be.faros.sandwichbar.sandwich_api.SandwichDTO;
@@ -15,20 +14,11 @@ public class ProductMapper {
                 product.getName(),
                 product.getProductRef(),
                 product.getPrice(),
-                ProductType.DRINK.name(),
+                product.getProductType(),
                 new ArrayList<>()
         );
     }
 
-    public ProductDTO mapDrinkToProductDTO(Drink drink) {
-        return new ProductDTO(
-                drink.getName(),
-                drink.getProductRef(),
-                drink.getPrice(),
-                ProductType.DRINK.name(),
-                new ArrayList<>()
-        );
-    }
 
     public static ProductDTO mapSandwichDTOToProductDTO(SandwichDTO sandwich) {
         return new ProductDTO(

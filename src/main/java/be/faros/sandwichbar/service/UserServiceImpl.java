@@ -5,6 +5,7 @@ import be.faros.sandwichbar.dto.request.UpdateUserRequest;
 import be.faros.sandwichbar.entity.User;
 import be.faros.sandwichbar.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Service;
@@ -13,14 +14,20 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Collection;
 import java.util.Optional;
 
+import static be.faros.sandwichbar.mapper.AddressMapper.mapAddressToDTO;
+
 @Service
 @Transactional
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final AddressService addressService;
 
-    public UserServiceImpl(UserRepository userRepository) {
+    @Autowired
+    public UserServiceImpl(UserRepository userRepository,
+                           AddressService addressService) {
         this.userRepository = userRepository;
+        this.addressService = addressService;
     }
 
     @Override
@@ -39,6 +46,8 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByUserRef(oidcUser.getName())
                 .orElseThrow(() -> new EntityNotFoundException("user_not_found"));
         user.setUsername(updateUserRequest.username());
+        user.setName(updateUserRequest.fullName());
+        user.setAddress(addressService.handleAddress(updateUserRequest.address()));
         userRepository.save(user);
     }
 
@@ -56,6 +65,8 @@ public class UserServiceImpl implements UserService {
                 user.getUserRef(),
                 user.getUsername(),
                 user.getEmail(),
+                user.getName(),
+                user.getAddress() != null ? mapAddressToDTO(user.getAddress()) : null,
                 authorities.stream().map(GrantedAuthority::getAuthority).toList()
         );
     }

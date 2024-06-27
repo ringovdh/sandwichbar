@@ -1,12 +1,14 @@
 package be.faros.sandwichbar.mother;
 
-import be.faros.sandwichbar.entity.Company;
+import be.faros.sandwichbar.dto.AddressDTO;
+import be.faros.sandwichbar.dto.request.UpdateUserRequest;
+import be.faros.sandwichbar.entity.Address;
 import be.faros.sandwichbar.entity.User;
 
 public class UserMother {
 
-    public static User createNewUserPino() {
-        return createUser("Pino", "pino@sesame.com", "pino");
+    public static User createNewUser1() {
+        return createUser("User One", "user1@sandwichbar.be", "user_1");
     }
 
     public static User createNewUserTommy() {
@@ -14,9 +16,9 @@ public class UserMother {
     }
 
 
-    public static User createExistingUserPino() {
-        User user = createNewUserPino();
-        user.setId(100);
+    public static User createExistingUser1() {
+        User user = createNewUser1();
+        user.setId(1);
         return user;
     }
 
@@ -26,15 +28,19 @@ public class UserMother {
         return user;
     }
 
-    public static User createUserPinoWithCompany(Company company) {
-        User user = createNewUserPino();
-        user.setCompany(company);
+    public static UpdateUserRequest createUpdateUserRequest(AddressDTO address) {
+        return new UpdateUserRequest("New username", "User From Sandwichbar", address);
+    }
+
+    public static User createUserPinoWithAddress(Address address) {
+        User user = createNewUser1();
+        user.setAddress(address);
         return user;
     }
 
-    public static User createUserTommyWithCompany(Company company) {
+    public static User createUserTommyWithAddress(Address address) {
         User user = createNewUserTommy();
-        user.setCompany(company);
+        user.setAddress(address);
         return user;
     }
 

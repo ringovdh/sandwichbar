@@ -2,7 +2,6 @@ package be.faros.sandwichbar.service;
 
 import be.faros.sandwichbar.dto.ProductDTO;
 import be.faros.sandwichbar.dto.response.GetProductsResponse;
-import be.faros.sandwichbar.entity.Drink;
 import be.faros.sandwichbar.entity.Product;
 import be.faros.sandwichbar.entity.ProductType;
 import be.faros.sandwichbar.mapper.ProductMapper;
@@ -45,9 +44,8 @@ public class ProductServiceImpl implements ProductService {
         List<Product> products = productRepository.findAll();
         return products.stream()
                 .filter(p -> p.getProductType().equals(ProductType.DRINK.name()))
-                .map(p -> (Drink)p)
-                .filter(d -> d.getStock() > 0)
-                .map(productMapper::mapDrinkToProductDTO)
+                .filter(p -> p.getStock() > 0)
+                .map(ProductMapper::mapProductToDTO)
                 .toList();
     }
 

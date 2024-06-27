@@ -5,11 +5,8 @@ import be.faros.sandwichbar.dto.request.CreateOrderRequest;
 import be.faros.sandwichbar.dto.response.CreateOrderResponse;
 import be.faros.sandwichbar.dto.response.GetOrderResponse;
 import be.faros.sandwichbar.dto.response.GetOrdersResponse;
-import be.faros.sandwichbar.entity.Drink;
 import be.faros.sandwichbar.entity.Order;
 import be.faros.sandwichbar.entity.OrderItem;
-import be.faros.sandwichbar.entity.Product;
-import be.faros.sandwichbar.entity.ProductType;
 import be.faros.sandwichbar.entity.User;
 import be.faros.sandwichbar.exception.InvalidOrderException;
 import be.faros.sandwichbar.exception.InvalidUserException;
@@ -23,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -33,21 +29,24 @@ public class OrderServiceImpl implements OrderService {
     private final UserRepository userRepository;
     private final OrderMapper orderMapper;
     private final ProductRepository productRepository;
+    private final AddressService addressService;
 
 
     @Autowired
     public OrderServiceImpl(OrderRepository orderRepository,
                             UserRepository userRepository,
-                            ProductRepository productRepository) {
+                            ProductRepository productRepository,
+                            AddressService addressService) {
         this.orderRepository = orderRepository;
         this.userRepository = userRepository;
         this.orderMapper = new OrderMapper();
         this.productRepository = productRepository;
+        this.addressService = addressService;
     }
 
     @Override
-    public CreateOrderResponse createOrder(CreateOrderRequest createOrderRequest, String ref) {
-        User user = userRepository.findByUserRef(ref)
+    public CreateOrderResponse createOrder(CreateOrderRequest createOrderRequest, String userRef) {
+        User user = userRepository.findByUserRef(userRef)
                 .orElseThrow(() -> new InvalidUserException("unknown_user"));
         Order newOrder = createNewOrder(user, createOrderRequest);
         return new CreateOrderResponse(newOrder.getId());
@@ -92,18 +91,16 @@ public class OrderServiceImpl implements OrderService {
             orderItem.setQuantity(i.quantity());
             orderItem.setProductRef(i.product().getProductRef());
 
-            Optional<Product> product = productRepository.findByProductRef(i.product().getProductRef());
+            productRepository.findByProductRef(i.product().getProductRef())
+                    .ifPresent(p -> {
+                        if (p.getStock() > i.quantity()) {
+                            p.setStock(p.getStock() - i.quantity());
+                            productRepository.save(p);
+                        } else {
+                            throw new InvalidOrderException("out_of_stock_drink");
+                        }
+                    });
 
-            //ToDO Update stock sandwiches on resourceserver
-            if (product.isPresent() && product.get().getProductType().equals(ProductType.DRINK.name())) {
-                Drink drink = (Drink) product.get();
-                if (drink.getStock() > i.quantity()) {
-                    drink.setStock(drink.getStock() - i.quantity());
-                    productRepository.save(drink);
-                } else {
-                    throw new InvalidOrderException("out_of_stock_drink");
-                }
-            }
             orderItems.add(orderItem);
         });
 

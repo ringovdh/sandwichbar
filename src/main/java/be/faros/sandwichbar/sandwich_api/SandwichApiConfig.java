@@ -16,7 +16,7 @@ public class SandwichApiConfig {
     String sandwichAPiURL;
 
     @Bean
-    public WebClient webClient(OAuth2AuthorizedClientManager authorizedClientManager) {
+    public WebClient WebClient(OAuth2AuthorizedClientManager authorizedClientManager) {
 
         var oauthFilter = new ServletOAuth2AuthorizedClientExchangeFilterFunction(
                 authorizedClientManager);
@@ -29,6 +29,15 @@ public class SandwichApiConfig {
                 .filter(logRequest())
                 .build();
     }
+
+    /*@Bean
+    public WebClient webClient() {
+
+        return WebClient.builder()
+                .baseUrl(sandwichAPiURL)
+                .filter(logRequest())
+                .build();
+    }*/
 
     private ExchangeFilterFunction logRequest() {
         return ExchangeFilterFunction.ofRequestProcessor(clientRequest -> {

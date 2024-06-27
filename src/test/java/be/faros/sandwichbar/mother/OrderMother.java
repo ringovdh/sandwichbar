@@ -26,7 +26,7 @@ public class OrderMother {
     }
 
     public static CreateOrderItemDTO createNewCreateOrderItemDTO(Product product) {
-        return new CreateOrderItemDTO(1, product.getProductRef());
+        return new CreateOrderItemDTO(1, product);
     }
 
 }

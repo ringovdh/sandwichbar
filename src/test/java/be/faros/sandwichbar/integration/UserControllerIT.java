@@ -1,8 +1,10 @@
 package be.faros.sandwichbar.integration;
 
+import be.faros.sandwichbar.dto.AddressDTO;
 import be.faros.sandwichbar.dto.UserinfoDTO;
 import be.faros.sandwichbar.dto.request.UpdateUserRequest;
 import be.faros.sandwichbar.entity.User;
+import be.faros.sandwichbar.mother.AddressMother;
 import be.faros.sandwichbar.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
@@ -14,6 +16,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.Optional;
 
+import static be.faros.sandwichbar.mother.UserMother.createUpdateUserRequest;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oidcLogin;
@@ -29,7 +32,7 @@ public class UserControllerIT extends ControllerITBase {
 
     @Test
     @Sql(statements = """
-            INSERT INTO "user"(id, name, username, email, user_ref) VALUES(1, 'User from Sandwichbar', 'User', 'user@sandwich.be', 'user@sandwich.be');
+            INSERT INTO "user"(id, name, username, email, user_ref, address_id) VALUES(1, 'User from Sandwichbar', 'User', 'user@sandwich.be', 'user@sandwich.be', null);
             """)
     @DisplayName("Get user info")
     public void getUserInfo() throws Exception {
@@ -47,12 +50,13 @@ public class UserControllerIT extends ControllerITBase {
 
     @Test
     @Sql(statements = """
-            INSERT INTO "user"(id, name, username, email, user_ref) VALUES(2, 'User from Sandwichbar', 'User', 'user@sandwich.be', 'user@sandwich.be');
+            INSERT INTO "user"(id, name, username, email, user_ref, address_id) VALUES(2, 'User from Sandwichbar', 'User', 'user@sandwich.be', 'user@sandwich.be', null);
             """)
     @DisplayName("Update user info")
     @Transactional
     public void updateUserInfo() throws Exception {
-        UpdateUserRequest updateUserRequest = new UpdateUserRequest("My username");
+        AddressDTO address = AddressMother.createAddressDTO();
+        UpdateUserRequest updateUserRequest = createUpdateUserRequest(address);
         String valueAsJson = objectMapper.writeValueAsString(updateUserRequest);
 
         mvc.perform(MockMvcRequestBuilders.put(UPDATE_USERINFO_URL)
@@ -64,6 +68,6 @@ public class UserControllerIT extends ControllerITBase {
         Optional<User> savedUser = userRepository.findByUserRef(user.getEmail());
 
         assertTrue(savedUser.isPresent());
-        assertEquals("My username", savedUser.get().getUsername());
+        assertEquals("New username", savedUser.get().getUsername());
     }
 }

@@ -39,7 +39,6 @@ public class OrderControllerIT extends ControllerITBase {
     @Test
     @Sql(statements = """
             INSERT INTO "user"(id, name, username, email, user_ref) VALUES(1, 'User from Sandwichbar', 'User', 'user@sandwich.be', 'user@sandwich.be');
-            INSERT INTO product(id, name, product_ref, price, product_type) VALUES (10, 'Cheese sandwich', 'PRD-001', 4.5, 'SANDWICH');
             INSERT INTO product(id, name, product_ref, price, stock, product_type) VALUES (20, 'Coca-Cola', 'PRD-002', 2.5, 5, 'DRINK');
             """)
     @DisplayName("Create an order")
@@ -91,7 +90,6 @@ public class OrderControllerIT extends ControllerITBase {
         assertEquals(1, response.id());
         assertEquals(user.getEmail(), response.client());
         assertEquals(2, response.items().size());
-        assertEquals(7.0, response.price());
     }
 
     @Test

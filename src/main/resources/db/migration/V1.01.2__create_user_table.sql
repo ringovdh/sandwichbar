@@ -4,5 +4,5 @@ CREATE TABLE IF NOT EXISTS "user" (
     userName        VARCHAR,
     email           VARCHAR,
     user_ref        VARCHAR,
-    company_id      INT REFERENCES company (id)
+    address_id      INT REFERENCES address (id)
 )
