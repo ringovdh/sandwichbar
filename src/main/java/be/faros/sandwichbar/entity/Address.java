@@ -1,17 +1,10 @@
 package be.faros.sandwichbar.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
-
-@Entity
-@Table(name = "address")
 public class Address extends BaseEntity {
 
     private String city;
     private String street;
     private int postcode;
-    @Column(name = "housenumber")
     private String houseNumber;
 
 

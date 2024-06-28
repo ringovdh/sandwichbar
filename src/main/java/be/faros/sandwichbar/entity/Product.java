@@ -1,8 +1,6 @@
 package be.faros.sandwichbar.entity;
 
-import jakarta.persistence.Entity;
 
-@Entity
 public class Product extends BaseEntity {
 
     private String name;

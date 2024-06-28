@@ -1,9 +1,14 @@
 package be.faros.sandwichbar.repository;
 
-import be.faros.sandwichbar.entity.OrderItem;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface OrderItemRepository extends JpaRepository<OrderItem, Integer> {
+public class OrderItemRepository extends BasicRepository {
+
+    @Autowired
+    public OrderItemRepository(NamedParameterJdbcTemplate template) {
+        super(template);
+    }
 }

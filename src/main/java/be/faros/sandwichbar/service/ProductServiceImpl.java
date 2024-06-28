@@ -18,14 +18,12 @@ import java.util.List;
 public class ProductServiceImpl implements ProductService {
 
     private final SandwichApiClient sandwichApiClient;
-    private final ProductMapper productMapper;
     private final ProductRepository productRepository;
 
     public ProductServiceImpl(SandwichApiClient sandwichApiClient,
                               ProductRepository productRepository) {
         this.sandwichApiClient = sandwichApiClient;
         this.productRepository = productRepository;
-        this.productMapper = new ProductMapper();
     }
 
 

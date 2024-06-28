@@ -1,13 +1,7 @@
 package be.faros.sandwichbar.entity;
 
-import jakarta.persistence.*;
-
-@Entity
-@Table(name="orderitem")
 public class OrderItem extends BaseEntity {
 
-    @ManyToOne
-    @JoinColumn(name = "order_id")
     private Order order;
 
     private int quantity;

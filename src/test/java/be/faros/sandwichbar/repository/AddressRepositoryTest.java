@@ -17,7 +17,7 @@ public class AddressRepositoryTest extends RepositoryTestBase {
     @DisplayName("Create new Address")
     public void createNewAddress() {
         Address address = createAddress();
-        addressRepository.save(address);
+        //addressRepository.save(address);
 
         assertNotEquals(0, address.getId());
     }

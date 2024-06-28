@@ -1,18 +1,11 @@
 package be.faros.sandwichbar.entity;
 
-import jakarta.persistence.*;
-
-@Entity
-@Table(name="\"user\"")
 public class User extends BaseEntity {
 
     private String name;
     private String username;
     private String email;
-    @Column(name="user_ref")
     private String userRef;
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    @JoinColumn(name = "address_id")
     private Address address;
 
 

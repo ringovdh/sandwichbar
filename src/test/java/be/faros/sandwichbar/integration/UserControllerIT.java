@@ -6,7 +6,6 @@ import be.faros.sandwichbar.dto.request.UpdateUserRequest;
 import be.faros.sandwichbar.entity.User;
 import be.faros.sandwichbar.mother.AddressMother;
 import be.faros.sandwichbar.repository.UserRepository;
-import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +52,6 @@ public class UserControllerIT extends ControllerITBase {
             INSERT INTO "user"(id, name, username, email, user_ref, address_id) VALUES(2, 'User from Sandwichbar', 'User', 'user@sandwich.be', 'user@sandwich.be', null);
             """)
     @DisplayName("Update user info")
-    @Transactional
     public void updateUserInfo() throws Exception {
         AddressDTO address = AddressMother.createAddressDTO();
         UpdateUserRequest updateUserRequest = createUpdateUserRequest(address);

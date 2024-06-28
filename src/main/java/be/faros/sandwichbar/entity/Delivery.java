@@ -1,20 +1,11 @@
 package be.faros.sandwichbar.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
-
 import java.util.Date;
 
-@Entity
-@Table(name="delivery")
 public class Delivery extends BaseEntity {
 
     private String status;
     private Date deliveryDate;
-    @OneToOne
-    @JoinColumn(name = "address_id", referencedColumnName = "id")
     private Address address;
 
 

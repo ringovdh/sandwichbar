@@ -3,8 +3,8 @@ package be.faros.sandwichbar.service;
 import be.faros.sandwichbar.dto.UserinfoDTO;
 import be.faros.sandwichbar.dto.request.UpdateUserRequest;
 import be.faros.sandwichbar.entity.User;
+import be.faros.sandwichbar.exception.InvalidUserException;
 import be.faros.sandwichbar.repository.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateUserInfo(OidcUser oidcUser, UpdateUserRequest updateUserRequest) {
         User user = userRepository.findByUserRef(oidcUser.getName())
-                .orElseThrow(() -> new EntityNotFoundException("user_not_found"));
+                .orElseThrow(() -> new InvalidUserException("user_not_found"));
         user.setUsername(updateUserRequest.username());
         user.setName(updateUserRequest.fullName());
         user.setAddress(addressService.handleAddress(updateUserRequest.address()));

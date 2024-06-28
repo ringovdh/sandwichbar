@@ -5,7 +5,6 @@ import be.faros.sandwichbar.dto.response.GetProductsResponse;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
-import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -36,9 +35,8 @@ public class ProductControllerIT extends ControllerITBase {
 
 
     @Test
-    @Transactional
     @Sql(statements = """
-            INSERT INTO product(id, name, product_ref, price, stock, product_type) VALUES (20, 'Coca-Cola', 'PRD-001', 2.5, 5, 'DRINK');
+            INSERT INTO product(name, product_ref, price, stock, product_type) VALUES ('Coca-Cola', 'PRD-001', 2.5, 5, 'DRINK');
             """)
     @DisplayName("Get all products ")
     void getAllProducts() throws Exception {
@@ -64,9 +62,8 @@ public class ProductControllerIT extends ControllerITBase {
     }
 
     @Test
-    @Transactional
     @Sql(statements = """
-            INSERT INTO product(id, name, product_ref, price, stock, product_type) VALUES (20, 'Coca-Cola', 'PRD-001', 2.5, 5, 'DRINK');
+            INSERT INTO product(name, product_ref, price, stock, product_type) VALUES ('Coca-Cola', 'PRD-001', 2.5, 5, 'DRINK');
             """)
     @DisplayName("Get all products service not available")
     void getAllProducts_error() throws Exception {

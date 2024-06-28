@@ -5,7 +5,7 @@ import org.springframework.boot.devtools.restart.RestartScope;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.context.annotation.Bean;
-import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.containers.MSSQLServerContainer;
 
 @Ignore
 @SpringBootTest
@@ -13,8 +13,8 @@ public class SandwichbarDevelopment {
     @Bean
     @RestartScope
     @ServiceConnection
-    PostgreSQLContainer postgreSQLContainer() {
-        return new PostgreSQLContainer<>("postgres:16-alpine3.18");
+    MSSQLServerContainer container() {
+        return new MSSQLServerContainer<>("mcr.microsoft.com/mssql/server");
     }
 
     public static void main(String[] args) {

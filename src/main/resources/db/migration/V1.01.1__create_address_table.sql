@@ -1,7 +1,8 @@
-CREATE TABLE IF NOT EXISTS address (
-    id          SERIAL PRIMARY KEY,
-    city        VARCHAR,
-    street      VARCHAR,
-    postcode    INT,
-    housenumber VARCHAR
+CREATE TABLE address
+(
+    address_id      INT IDENTITY(1,1) PRIMARY KEY,
+    city            VARCHAR(255),
+    street          VARCHAR(255),
+    postcode        INT,
+    housenumber     VARCHAR(5)
 )

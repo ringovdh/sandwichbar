@@ -1,6 +1,7 @@
-CREATE TABLE IF NOT EXISTS orderItem (
-    id              SERIAL PRIMARY KEY,
-    order_id        INT NOT NULL REFERENCES "order" (id),
+CREATE TABLE orderItem
+(
+    orderitem_id    INT NOT NULL PRIMARY KEY,
+    order_id        INT NOT NULL REFERENCES "order" (order_id),
     quantity        INT,
-    product_ref     VARCHAR
+    product_ref     VARCHAR(255)
 )

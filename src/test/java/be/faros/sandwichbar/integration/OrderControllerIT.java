@@ -6,7 +6,6 @@ import be.faros.sandwichbar.dto.response.GetOrderResponse;
 import be.faros.sandwichbar.dto.response.GetOrdersResponse;
 import be.faros.sandwichbar.entity.Order;
 import be.faros.sandwichbar.repository.OrderRepository;
-import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +17,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static be.faros.sandwichbar.mother.OrderMother.createNewCreateOrderItemDTO;
-import static be.faros.sandwichbar.mother.ProductMother.createImportedProduct;
 import static be.faros.sandwichbar.mother.ProductMother.createExistingDrink;
+import static be.faros.sandwichbar.mother.ProductMother.createImportedProduct;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -42,7 +41,6 @@ public class OrderControllerIT extends ControllerITBase {
             INSERT INTO product(id, name, product_ref, price, stock, product_type) VALUES (20, 'Coca-Cola', 'PRD-002', 2.5, 5, 'DRINK');
             """)
     @DisplayName("Create an order")
-    @Transactional
     public void createOrder() throws Exception {
         CreateOrderRequest order = new CreateOrderRequest(List.of(
                 createNewCreateOrderItemDTO(createImportedProduct()),
@@ -76,7 +74,6 @@ public class OrderControllerIT extends ControllerITBase {
             INSERT INTO orderitem(id, order_id, quantity, product_ref) VALUES(2, 1, 1, 'PRD-002');
             """)
     @DisplayName("Get an order by id")
-    @Transactional
     public void getOrder() throws Exception {
         String result = mvc.perform(MockMvcRequestBuilders.get(GET_ORDER_URL + 1)
                         .with(oidcLogin().oidcUser(user))
@@ -101,7 +98,6 @@ public class OrderControllerIT extends ControllerITBase {
             INSERT INTO orderitem(id, order_id, quantity, product_ref) VALUES(2, 2, 1, 'PRD-002');
             """)
     @DisplayName("Get all orders by user")
-    @Transactional
     public void getOrdersByUser() throws Exception {
         String result = mvc.perform(MockMvcRequestBuilders.get(GET_ORDERS_URL)
                         .with(oidcLogin().oidcUser(user))
@@ -126,7 +122,6 @@ public class OrderControllerIT extends ControllerITBase {
             INSERT INTO orderitem(id, order_id, quantity, product_ref) VALUES(2, 2, 1, 'PRD-002');
             """)
     @DisplayName("Get all orders as admin")
-    @Transactional
     public void getOrdersAsAdmin() throws Exception {
         String result = mvc.perform(MockMvcRequestBuilders.get(GET_ALL_ORDERS_URL)
                         .with(oidcLogin().oidcUser(admin))

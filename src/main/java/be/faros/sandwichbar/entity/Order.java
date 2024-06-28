@@ -1,18 +1,11 @@
 package be.faros.sandwichbar.entity;
 
-import jakarta.persistence.*;
-
 import java.util.List;
 
-@Entity
-@Table(name="\"order\"")
 public class Order extends BaseEntity {
 
-    @OneToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.PERSIST)
     private List<OrderItem> items;
 
 
