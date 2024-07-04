@@ -1,8 +1,10 @@
 package be.faros.sandwichbar.service;
 
-import be.faros.sandwichbar.dto.response.GetProductsResponse;
+import be.faros.sandwichbar.dto.ProductDTO;
+
+import java.util.List;
 
 public interface ProductService {
 
-    GetProductsResponse findAllAvailableProducts();
+    List<ProductDTO> findAllAvailableProducts();
 }

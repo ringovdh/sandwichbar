@@ -1,9 +1,9 @@
 package be.faros.sandwichbar.controller;
 
-import be.faros.sandwichbar.dto.response.GetProductsResponse;
-import org.springframework.http.ResponseEntity;
+import org.springframework.web.servlet.ModelAndView;
 
 public interface ProductController {
 
-    ResponseEntity<GetProductsResponse> getAllProducts();
+    ModelAndView getAllProducts();
+
 }

@@ -1,0 +1,11 @@
+#root {
+    width: 80%;
+    margin: auto;
+}
+.header-logo {
+    width: 10%;
+}
+.sandwichbar-background {
+    height: 200px;
+    background: url("../images/112y_axpx_220118.jpg") no-repeat center/contain;
+}

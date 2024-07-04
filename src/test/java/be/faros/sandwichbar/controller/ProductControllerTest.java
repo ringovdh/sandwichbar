@@ -1,6 +1,5 @@
 package be.faros.sandwichbar.controller;
 
-import be.faros.sandwichbar.dto.response.GetProductsResponse;
 import be.faros.sandwichbar.service.ProductServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,7 +19,7 @@ public class ProductControllerTest extends ControllerTestBase {
     @Test
     @DisplayName("Get all products")
     void getAllProducts_success() throws Exception {
-        when(productService.findAllAvailableProducts()).thenReturn(new GetProductsResponse(emptyList()));
+        when(productService.findAllAvailableProducts()).thenReturn(emptyList());
 
         mvc.perform(MockMvcRequestBuilders.get("/products"))
                 .andExpect(status().isOk())

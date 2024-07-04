@@ -63,6 +63,9 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.GET, "/products").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/home").permitAll()
+                        .requestMatchers("/WEB-INF/**", "/resources/**").permitAll()
                         .anyRequest().authenticated())
                 .oauth2Login(oauth -> {
                     oauth.successHandler(oAuth2loginSuccessHandler);

@@ -1,7 +1,6 @@
 package be.faros.sandwichbar.service;
 
 import be.faros.sandwichbar.dto.ProductDTO;
-import be.faros.sandwichbar.dto.response.GetProductsResponse;
 import be.faros.sandwichbar.entity.Product;
 import be.faros.sandwichbar.repository.ProductRepository;
 import be.faros.sandwichbar.sandwich_api.SandwichApiClient;
@@ -39,10 +38,10 @@ class ProductServiceTest extends SandwichbarTestBase {
         when(productRepository.findAll()).thenReturn(List.of(drink));
         when(sandwichApiClient.getSandwiches()).thenReturn(List.of(sandwich));
 
-        GetProductsResponse availableProducts = productService.findAllAvailableProducts();
+        List<ProductDTO> availableProducts = productService.findAllAvailableProducts();
 
         verify(productRepository).findAll();
-        assertEquals(2, availableProducts.products().size());
+        assertEquals(2, availableProducts.size());
     }
 
 }

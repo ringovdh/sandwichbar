@@ -13,6 +13,8 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>sandwichbar</name>
     <description>sandwichbar</description>
+    <packaging>war</packaging>
+
     <properties>
         <java.version>21</java.version>
         <postgresql.version>42.7.2</postgresql.version>
@@ -72,9 +74,23 @@
                     <scope>test</scope>
                 </dependency>
                 <dependency>
-                    <groupId>org.springframework.webflow</groupId>
-                    <artifactId>spring-webflow</artifactId>
+                    <groupId>org.apache.tomcat.embed</groupId>
+                    <artifactId>tomcat-embed-jasper</artifactId>
+                    <scope>provided</scope>
+                </dependency>
+                <dependency>
+                    <groupId>jakarta.servlet.jsp.jstl</groupId>
+                    <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
                     <version>3.0.0</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.glassfish.web</groupId>
+                    <artifactId>jakarta.servlet.jsp.jstl</artifactId>
+                    <version>3.0.1</version>
+                </dependency>
+                <dependency>
+                    <groupId>org.springframework.security</groupId>
+                    <artifactId>spring-security-taglibs</artifactId>
                 </dependency>
             </dependencies>
         </profile>

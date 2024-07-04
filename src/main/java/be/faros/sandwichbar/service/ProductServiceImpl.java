@@ -1,7 +1,6 @@
 package be.faros.sandwichbar.service;
 
 import be.faros.sandwichbar.dto.ProductDTO;
-import be.faros.sandwichbar.dto.response.GetProductsResponse;
 import be.faros.sandwichbar.entity.Product;
 import be.faros.sandwichbar.entity.ProductType;
 import be.faros.sandwichbar.mapper.ProductMapper;
@@ -29,13 +28,13 @@ public class ProductServiceImpl implements ProductService {
 
     @Transactional(readOnly = true)
     @Override
-    public GetProductsResponse findAllAvailableProducts() {
+    public List<ProductDTO> findAllAvailableProducts() {
         List<ProductDTO> avaliableProducts = new ArrayList<>();
 
         avaliableProducts.addAll(getDrinks());
         avaliableProducts.addAll(sandwichApiClient.getSandwiches());
 
-        return new GetProductsResponse(avaliableProducts);
+        return avaliableProducts;
     }
 
     private List<ProductDTO> getDrinks() {
