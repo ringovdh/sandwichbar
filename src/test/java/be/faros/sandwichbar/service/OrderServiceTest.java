@@ -107,8 +107,8 @@ class OrderServiceTest extends SandwichbarTestBase {
         savedOrder.setUser(user);
         savedOrder.setItems(List.of(orderItem1, orderItem2));
         CreateOrderRequest request = new CreateOrderRequest(
-                List.of(new CreateOrderItemDTO(1, importedProduct.getProductRef()),
-                        new CreateOrderItemDTO(1, drink.getProductRef())),
+                List.of(new CreateOrderItemDTO(1, importedProduct),
+                        new CreateOrderItemDTO(1, drink)),
                 createAddressDTO()
         );
 
@@ -130,7 +130,7 @@ class OrderServiceTest extends SandwichbarTestBase {
         Product drink = createExistingDrinkOutOfStock();
 
         CreateOrderRequest request = new CreateOrderRequest(
-                List.of(new CreateOrderItemDTO(1, drink.getProductRef())),
+                List.of(new CreateOrderItemDTO(1, drink)),
                 createAddressDTO()
         );
 
